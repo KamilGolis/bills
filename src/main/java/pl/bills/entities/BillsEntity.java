@@ -1,6 +1,7 @@
 package pl.bills.entities;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 
 /**
  * Created by trot on 08.01.17.
@@ -12,15 +13,41 @@ public class BillsEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
+    @Column(length = 200)
     private String comment;
-    private Double price;
+    private BigDecimal price;
+    @Column(length = 50)
     private String title;
-    private String category;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    private CategoryEntity category;
+
+    @ManyToOne
     @JoinColumn(name = "status_id")
     private StatusEntity status;
 
+    @ManyToOne
+    @JoinColumn(name = "loan_holder_id")
+    private LoanHolderEntity loanHolder;
+
+    public BillsEntity() {
+    }
+
+    public BillsEntity(String title, CategoryEntity category, StatusEntity status, LoanHolderEntity loanHolder) {
+        this.title = title;
+        this.category = category;
+        this.status = status;
+        this.loanHolder = loanHolder;
+    }
+
+    public LoanHolderEntity getLoanHolder() {
+        return loanHolder;
+    }
+
+    public void setLoanHolder(LoanHolderEntity loanHolder) {
+        this.loanHolder = loanHolder;
+    }
 
     public Integer getId() {
         return id;
@@ -38,11 +65,11 @@ public class BillsEntity {
         this.comment = comment;
     }
 
-    public Double getPrice() {
+    public BigDecimal getPrice() {
         return price;
     }
 
-    public void setPrice(Double price) {
+    public void setPrice(BigDecimal price) {
         this.price = price;
     }
 
@@ -54,11 +81,11 @@ public class BillsEntity {
         this.title = title;
     }
 
-    public String getCategory() {
+    public CategoryEntity getCategory() {
         return category;
     }
 
-    public void setCategory(String category) {
+    public void setCategory(CategoryEntity category) {
         this.category = category;
     }
 
@@ -69,5 +96,18 @@ public class BillsEntity {
 
     public void setStatus(StatusEntity status) {
         this.status = status;
+    }
+
+    @Override
+    public String toString() {
+        return "BillsEntity{" +
+                "id=" + id +
+                ", comment='" + comment + '\'' +
+                ", price=" + price +
+                ", title='" + title + '\'' +
+                ", category='" + category.getName() + '\'' +
+                ", status=" + status.getName() +
+                ", loanHolder=" + loanHolder.getName() +
+                '}';
     }
 }

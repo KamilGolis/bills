@@ -4,27 +4,26 @@ import javax.persistence.*;
 import java.util.Set;
 
 /**
- * Created by trot on 08.01.17.
+ * Created by trot on 09.01.17.
  */
 
 @Entity
-@Table(name = "status")
-public class StatusEntity {
+@Table(name = "category")
+public class CategoryEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "status_id")
-    private Integer id;
-    @Column(length = 50)
+    @Column(name = "category_id")
+    private Integer categoryId;
     private String name;
 
-    @OneToMany(mappedBy = "status", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "category")
     private Set<BillsEntity> billsEntity;
 
-    public StatusEntity() {
+    public CategoryEntity() {
     }
 
-    public StatusEntity(String name) {
+    public CategoryEntity(String name) {
         this.name = name;
     }
 
@@ -36,13 +35,12 @@ public class StatusEntity {
         this.billsEntity = billsEntity;
     }
 
-
-    public Integer getId() {
-        return id;
+    public Integer getCategoryId() {
+        return categoryId;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setCategoryId(Integer categoryId) {
+        this.categoryId = categoryId;
     }
 
     public String getName() {
