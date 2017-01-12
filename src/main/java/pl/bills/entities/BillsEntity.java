@@ -1,7 +1,10 @@
 package pl.bills.entities;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.util.Date;
 
 /**
  * Created by trot on 08.01.17.
@@ -18,6 +21,8 @@ public class BillsEntity {
     private BigDecimal price;
     @Column(length = 50)
     private String title;
+    @DateTimeFormat
+    private Date date;
 
     @ManyToOne
     @JoinColumn(name = "category_id")
@@ -39,6 +44,14 @@ public class BillsEntity {
         this.category = category;
         this.status = status;
         this.loanHolder = loanHolder;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
     }
 
     public LoanHolderEntity getLoanHolder() {

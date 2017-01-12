@@ -6,6 +6,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
 import pl.bills.dao.BillsDao;
 import pl.bills.dao.CategoryDao;
 import pl.bills.dao.StatusDao;
@@ -35,14 +36,13 @@ public class HomeController {
         return "index";
     }
 
-    @RequestMapping("/home")
-    public String home(Model model) {
-
+    @RequestMapping(value = "/home", method = RequestMethod.GET)
+    public ModelAndView home() {
+        ModelAndView mav = new ModelAndView("home");
         List<BillsEntity> billsEntityList = billsDao.findBillsByCategoryName("main");
-        model.addAttribute("billList", billsEntityList);
-        model.addAttribute("statusList", statusDao.findAll());
-        model.addAttribute("billsCount", billsEntityList.size());
-        return "home";
+        mav.addObject("billList", billsEntityList);
+        mav.addObject("itemsInList", billsEntityList.size());
+        return mav;
     }
 
 
@@ -67,9 +67,14 @@ public class HomeController {
         return "home";
     }
 
-    @RequestMapping(value = "add", method = RequestMethod.POST)
-    public String add(BillsDao billsDao) {
+    @RequestMapping(value = "/addRecord", method = RequestMethod.GET)
+    public ModelAndView addRecord() {
 
+        ModelAndView mav = new ModelAndView("addrecord");
+        BillsEntity billsEntity = new BillsEntity();
+        mav.addObject("billsEntity", billsEntity);
+        mav.addObject("statusList", statusDao.findAll());
+        return mav;
 //        BillWrapper bw = new BillWrapper();
 //        Bill bill = bw.createBill(billDao);
 
@@ -82,6 +87,12 @@ public class HomeController {
 //
 //        bill.setCategory("main");
 //        billRepository.save(bill);
-        return "redirect:home";
+        //return "redirect:home";
+    }
+
+    @RequestMapping(value = "add", method = RequestMethod.POST)
+    public String add(BillsEntity billsEntity) {
+        billsDao.save(billsEntity);
+        return "home";
     }
 }
