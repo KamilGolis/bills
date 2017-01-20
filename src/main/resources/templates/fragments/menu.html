@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+</head>
+<body>
+<div th:fragment="left (activeMenu)">
+    <ul class="nav nav-sidebar">
+        <li th:class="${activeMenu == 'home'}? 'active'"><a th:href="@{home}">Podsumowanie</a></li>
+        <li th:class="${activeMenu == 'raport'}? 'active'"><a th:href="@{raport}">Raporty</a></li>
+        <li th:class="${activeMenu == 'import'}? 'active'"><a th:href="@{import}">Inport/Export</a></li>
+    </ul>
+    <ul class="nav nav-sidebar">
+        <li th:class="${activeMenu == 'bills'}? 'active'"><a th:href="@{bills}">Wszystkie rachunki</a></li>
+        <li><a href="">Wyszukaj rachunki</a></li>
+        <li><a href="">Elementy usunięte</a></li>
+    </ul>
+</div>
+</body>
+</html>

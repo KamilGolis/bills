@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+</head>
+<body>
+
+<div th:fragment="content">
+    <h1 class="page-header">Podsumowanie rachunków</h1>
+    <div class="row placeholders">
+        <div class="col-xs-6 col-sm-4 placeholder">
+            {Najbliższe 5 rachunków}
+        </div>
+        <div class="col-xs-6 col-sm-4 placeholder">
+            {Suma wydatków w miesiącu}
+        </div>
+        <div class="col-xs-6 col-sm-4 placeholder">
+            {Suma wydatków w roku}
+        </div>
+    </div>
+    <h2 class="sub-header">Podsumowanie miesięczne za okres od {data} do {data}</h2>
+
+    <div class="col-xs-6 col-sm-4">
+        <span class="label label-primary">Wydatki łącznie</span>
+        <p>2500 zł</p>
+    </div>
+    <div class="col-xs-6 col-sm-4">
+        <span class="label label-danger">Największy jednorazowy wydatek</span>
+        <p>Kredyt hipoteczny 1000 zł</p>
+    </div>
+    <div class="col-xs-6 col-sm-4">
+        <span class="label label-info">Najczęstszy wydatek</span>
+        <p>Zakupy 733 zł łącznie</p>
+    </div>
+
+    <h2 class="sub-header">Podsumowanie roczne za rok {rok}</h2>
+</div>
+</body>
+</html>
