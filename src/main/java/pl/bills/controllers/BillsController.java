@@ -3,17 +3,14 @@ package pl.bills.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
-import pl.bills.entities.BillsEntity;
-import pl.bills.repository.BillsRepository;
-import pl.bills.repository.CategoryRepository;
-import pl.bills.repository.StatusRepository;
+import pl.bills.forms.AddRecordForm;
 import pl.bills.services.BillsService;
-
-import java.util.Collection;
+import pl.bills.services.StatusService;
 
 /**
  * Created by trot on 19.01.17.
@@ -24,6 +21,9 @@ public class BillsController {
 
     @Autowired
     BillsService billsService;
+
+    @Autowired
+    StatusService statusService;
 
     @RequestMapping(value = "/bills", method = RequestMethod.GET)
     public ModelAndView bills(Model model) {
@@ -40,16 +40,6 @@ public class BillsController {
         return mav;
     }
 
-//    @RequestMapping(value = "/addRecord", method = RequestMethod.GET)
-//    public ModelAndView addRecord() {
-//
-//        ModelAndView mav = new ModelAndView("home");
-//        BillsEntity billsEntity = new BillsEntity();
-//        mav.addObject("billsEntity", billsEntity);
-//        mav.addObject("statusList", statusRepository.findAll());
-//        return mav;
-//    }
-
     @RequestMapping(value = "/remove")
     public String trash(@RequestParam Integer id) {
         if (billsService.removeBill(id)) {
@@ -58,4 +48,18 @@ public class BillsController {
         return "bills";
     }
 
+    @RequestMapping(value = "/addrecord")
+    public ModelAndView addForm(Model model) {
+        model.addAttribute("activeMenu", "bills");
+        ModelAndView mav = new ModelAndView("newRecord");
+        mav.addObject("statusList", statusService.getAllStatuses());
+        mav.addObject("form", new AddRecordForm());
+        return mav;
+    }
+
+    @RequestMapping(value = "/add", method = RequestMethod.POST)
+    public String add(@ModelAttribute AddRecordForm form) {
+        billsService.addBillFromForm(form);
+        return "redirect:bills";
+    }
 }

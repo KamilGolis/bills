@@ -17,13 +17,18 @@ public class BillsEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
+
     @Column(length = 200)
     private String comment;
+
     private BigDecimal price;
+
     @Column(length = 50)
     private String title;
+
+    @Temporal(TemporalType.DATE)
     @DateTimeFormat
-    private LocalDate date;
+    private Date date;
 
     @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
@@ -47,11 +52,11 @@ public class BillsEntity {
         this.loanHolder = loanHolder;
     }
 
-    public LocalDate getDate() {
+    public Date getDate() {
         return date;
     }
 
-    public void setDate(LocalDate date) {
+    public void setDate(Date date) {
         this.date = date;
     }
 

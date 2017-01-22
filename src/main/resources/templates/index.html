@@ -16,7 +16,7 @@
 </head>
 
 <body>
-
+<div class="loader"></div>
 <nav th:replace="fragments/navigation :: top"></nav>
 
 <div class="container-fluid">
@@ -36,6 +36,11 @@
 </div>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <script th:src="@{js/bootstrap.min.js}"></script>
+<script type="text/javascript">
+    $(window).load(function() {
+        $(".loader").fadeOut("slow");
+    })
+</script>
 </body>
 
 </html>

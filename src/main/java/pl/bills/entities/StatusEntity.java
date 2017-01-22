@@ -21,6 +21,8 @@ public class StatusEntity {
     @OneToMany(mappedBy = "status", cascade = CascadeType.ALL)
     private Set<BillsEntity> billsEntity;
 
+    private String statusColour;
+
     public StatusEntity() {
     }
 
@@ -36,7 +38,6 @@ public class StatusEntity {
         this.billsEntity = billsEntity;
     }
 
-
     public Integer getId() {
         return id;
     }
@@ -51,5 +52,13 @@ public class StatusEntity {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getStatusColour() {
+        return statusColour;
+    }
+
+    public void setStatusColour(String statusColour) {
+        this.statusColour = statusColour;
     }
 }

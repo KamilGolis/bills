@@ -103,3 +103,30 @@ body {
     display: inline-block;
     border-radius: 50%;
 }
+.loader {
+    position: fixed;
+    left: 0px;
+    top: 0px;
+    width: 100%;
+    height: 100%;
+    z-index: 9999;
+    background: url('images/page-loader.gif') 50% 50% no-repeat rgba(249,249,249,150);
+}
+.errorloader {
+    position: fixed;
+    left: 0px;
+    top: 0px;
+    width: 100%;
+    height: 100%;
+    z-index: 9999;
+    background: url('images/fuel-404-logo.png') 50% 50% no-repeat rgb(49,49,49);
+}
+.btn-default-noborder {
+    color: #333;
+    background-color: rgba(255,255,255,0);
+}
+.btn-default-noborder:hover {
+    color: #333;
+    background-color: #e6e6e6;
+    border-color: #adadad;
+}
