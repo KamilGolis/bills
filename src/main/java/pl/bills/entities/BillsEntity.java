@@ -119,14 +119,6 @@ public class BillsEntity {
 
     @Override
     public String toString() {
-        return "BillsEntity{" +
-                "id=" + id +
-                ", comment='" + comment + '\'' +
-                ", price=" + price +
-                ", title='" + title + '\'' +
-                ", category='" + category.getName() + '\'' +
-                ", status=" + status.getName() +
-                ", loanHolder=" + loanHolder.getName() +
-                '}';
+        return  title + " - " + price + " PLN";
     }
 }

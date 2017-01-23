@@ -1,6 +1,7 @@
 package pl.bills.entities;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.Set;
 
 /**
@@ -15,6 +16,8 @@ public class CategoryEntity {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "category_id")
     private Integer categoryId;
+    @NotNull
+    @Column(unique = true)
     private String name;
 
     @OneToMany(mappedBy = "category")

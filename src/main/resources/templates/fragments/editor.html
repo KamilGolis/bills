@@ -49,8 +49,54 @@
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
+</div>
 
+<div th:fragment="editrecord">
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3">
 
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Edytuj rekord</h3>
+                </div>
+
+                <div class="panel-body">
+                    <div class="col-md-10 col-md-offset-1">
+                        <form class="form-horizontal" action="#" th:action="@{/apply(id=${form.id})}" th:object="${form}" method="POST">
+                            <div class="form-group">
+                                <label>Nazwa</label>
+                                <input type="text" class="form-control" th:field="*{title}" th:value="*{title}"
+                                       placeholder="Rachunek za..."/>
+                            </div>
+                            <div class="form-group">
+
+                                <label>Wybierz status rachunku:</label>
+                                <select class="form-control" th:field="*{status}">
+                                    <option th:each="s : ${statusList}" th:value="${s.name}" th:text="${s.name}"
+                                    th:selected="${form.status == s.name}? 'selected'">
+                                    </option>
+                                </select>
+
+                            </div>
+                            <div class="form-group">
+                                <label class="sr-only">Kwota (w zł)</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" th:field="*{price}" th:value="*{price}"
+                                           placeholder="Kwota"/>
+                                    <div class="input-group-addon">PLN</div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Opis dodatkowy</label>
+                                <textarea class="form-control" th:field="*{comment}" th:value="*{comment}" rows="5"/>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Zapisz zmiany</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 

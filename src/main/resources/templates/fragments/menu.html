@@ -12,7 +12,7 @@
     </ul>
     <ul class="nav nav-sidebar">
         <li th:class="${activeMenu == 'bills'}? 'active'"><a th:href="@{bills}">Wszystkie rachunki</a></li>
-        <li><a href="">Elementy usunięte</a></li>
+        <li th:class="${activeMenu == 'trash'}? 'active'"><a th:href="@{trash}">Elementy usunięte</a></li>
     </ul>
 </div>
 </body>

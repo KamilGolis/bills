@@ -7,6 +7,7 @@ import java.math.BigDecimal;
  */
 public class AddRecordForm {
 
+    private Integer id;
     private String title;
     private String comment;
     private BigDecimal price;
@@ -52,5 +53,13 @@ public class AddRecordForm {
 
     public String getStatus() {
         return status;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 }

@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import pl.bills.entities.BillsEntity;
 import pl.bills.entities.CategoryEntity;
 import pl.bills.entities.StatusEntity;
+import pl.bills.enums.CategoryEnum;
 import pl.bills.forms.AddRecordForm;
 import pl.bills.repository.BillsRepository;
 import pl.bills.repository.CategoryRepository;
@@ -12,9 +13,9 @@ import pl.bills.repository.StatusRepository;
 
 import java.util.Collection;
 import java.util.Comparator;
-import java.util.Map;
-import java.util.function.Function;
-import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.counting;
+import static java.util.stream.Collectors.groupingBy;
 
 /**
  * Created by trot on 09.01.17.
@@ -32,23 +33,44 @@ public class BillsService {
     StatusRepository statusRepository;
 
     public Collection<BillsEntity> getBills() {
-        return billsRepository.findAllByCategoryName("main");
+        return billsRepository.findAllByCategoryName(CategoryEnum.MAIN.get());
+    }
+
+    public BillsEntity getOneBill(Integer id) {
+        return billsRepository.findById(id);
+    }
+
+    public Collection<BillsEntity> getDeletedBills() {
+        return billsRepository.findAllByCategoryName(CategoryEnum.TRASH.get());
     }
 
     public boolean removeBill(Integer id) {
         BillsEntity bill = billsRepository.findById(id);
         if (bill != null) {
-            CategoryEntity category = categoryRepository.findByName("trash");
-            if (category == null) {
-                CategoryEntity newCategory = new CategoryEntity();
-                newCategory.setName("trash");
-                categoryRepository.save(newCategory);
-                category = categoryRepository.findByName("trash");
+            CategoryEntity category = categoryRepository.findByName(CategoryEnum.TRASH.get());
+            if (category != null) {
+                bill.setCategory(category);
+                billsRepository.save(bill);
             }
-            bill.setCategory(category);
-            billsRepository.save(bill);
             return true;
         } else return false;
+    }
+
+    public void undoBill(Integer id) {
+        BillsEntity bill = billsRepository.findById(id);
+        if (bill != null) {
+            CategoryEntity category = categoryRepository.findByName(CategoryEnum.MAIN.get());
+            if (category != null) {
+                bill.setCategory(category);
+                billsRepository.save(bill);
+            }
+        }
+    }
+
+    public void deleteBill(Integer id) {
+        if (billsRepository.findById(id) != null) {
+            billsRepository.delete(id);
+        }
     }
 
     public Collection<BillsEntity> search(String searchValue) {
@@ -73,9 +95,9 @@ public class BillsService {
         bills.setComment(form.getComment());
         bills.setPrice(form.getPrice());
 
-        CategoryEntity category = categoryRepository.findByName("main");
+        CategoryEntity category = categoryRepository.findByName(CategoryEnum.MAIN.get());
         if (category == null) {
-            category.setName("main");
+            category.setName(CategoryEnum.MAIN.get());
             categoryRepository.save(category);
         }
         bills.setCategory(category);
@@ -88,11 +110,24 @@ public class BillsService {
             statusRepository.save(status);
         }
 
+        if (form.getId() != null) {
+            bills.setId(form.getId());
+        }
         return bills;
     }
 
+    public AddRecordForm getFormFromBillsEntity(BillsEntity bill) {
+        AddRecordForm form = new AddRecordForm();
+        form.setTitle(bill.getTitle());
+        form.setStatus(bill.getStatus().getName());
+        form.setComment(bill.getComment());
+        form.setPrice(bill.getPrice());
+        form.setId(bill.getId());
+        return form;
+    }
+
     public String totalBillsPrice() {
-        return billsRepository.findAllByCategoryName("main")
+        return billsRepository.findAllByCategoryName(CategoryEnum.MAIN.get())
                 .stream()
                 .map(x -> x.getPrice())
                 .reduce((x, y) -> x.add(y))
@@ -100,14 +135,21 @@ public class BillsService {
     }
 
     public String biggestBillPrice() {
-        BillsEntity be = billsRepository.findAllByCategoryName("main").stream()
+        BillsEntity be = billsRepository.findAllByCategoryName(CategoryEnum.MAIN.get()).stream()
                 .max(Comparator.comparing(i -> i.getPrice()))
                 .get();
-        return be.getTitle() + " " + be.getPrice() + " PLN";
+        return be.toString();
     }
 
     public String mostFrequentBill() {
-
-        return "Not implemented yet.";
+        String counter = billsRepository.findAllByCategoryName(CategoryEnum.MAIN.get())
+                .stream()
+                .collect(groupingBy(p -> p.getTitle(), counting()))
+                .entrySet()
+                .stream()
+                .max(Comparator.comparing(i -> i.getValue()))
+                .get().getKey();
+        return counter;
     }
+
 }
