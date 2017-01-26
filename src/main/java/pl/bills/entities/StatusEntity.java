@@ -1,6 +1,7 @@
 package pl.bills.entities;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.Set;
 
 /**
@@ -15,7 +16,8 @@ public class StatusEntity {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "status_id")
     private Integer id;
-    @Column(length = 50)
+    @NotNull
+    @Column(length = 50, unique = true)
     private String name;
 
     @OneToMany(mappedBy = "status", cascade = CascadeType.ALL)

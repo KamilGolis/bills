@@ -1,13 +1,15 @@
 package pl.bills.controllers;
 
+import com.github.dandelion.datatables.core.ajax.DataSet;
+import com.github.dandelion.datatables.core.ajax.DatatablesCriterias;
+import com.github.dandelion.datatables.core.ajax.DatatablesResponse;
+import com.github.dandelion.datatables.extras.spring3.ajax.DatatablesParams;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import pl.bills.entities.BillsEntity;
 import pl.bills.forms.AddRecordForm;
 import pl.bills.services.BillsService;
 import pl.bills.services.StatusService;
@@ -62,4 +64,5 @@ public class BillsController {
         billsService.addBillFromForm(form);
         return "redirect:bills";
     }
+
 }

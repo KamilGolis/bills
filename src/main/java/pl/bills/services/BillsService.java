@@ -1,5 +1,7 @@
 package pl.bills.services;
 
+import com.github.dandelion.datatables.core.ajax.DataSet;
+import com.github.dandelion.datatables.core.ajax.DatatablesCriterias;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.bills.entities.BillsEntity;
@@ -11,6 +13,7 @@ import pl.bills.repository.BillsRepository;
 import pl.bills.repository.CategoryRepository;
 import pl.bills.repository.StatusRepository;
 
+import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.Comparator;
 
@@ -129,14 +132,14 @@ public class BillsService {
     public String totalBillsPrice() {
         return billsRepository.findAllByCategoryName(CategoryEnum.MAIN.get())
                 .stream()
-                .map(x -> x.getPrice())
+                .map(x -> (x.getPrice() == null ? BigDecimal.ZERO : x.getPrice()))
                 .reduce((x, y) -> x.add(y))
                 .get().toString() + " PLN";
     }
 
     public String biggestBillPrice() {
         BillsEntity be = billsRepository.findAllByCategoryName(CategoryEnum.MAIN.get()).stream()
-                .max(Comparator.comparing(i -> i.getPrice()))
+                .max(Comparator.comparing(i -> (i.getPrice() == null ? BigDecimal.ZERO : i.getPrice())))
                 .get();
         return be.toString();
     }

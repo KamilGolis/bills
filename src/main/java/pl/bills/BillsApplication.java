@@ -8,6 +8,7 @@ public class BillsApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(BillsApplication.class, args);
+
 //        ApplicationContext ctx = SpringApplication.run(BillsApplication.class, args);
 //        BillService billsService = ctx.getBean("billService", BillService.class);
 //
