@@ -5,22 +5,23 @@ import java.math.BigDecimal;
 /**
  * Created by trot on 22.01.17.
  */
-public class AddRecordForm {
+public class RecordForm {
 
     private Integer id;
     private String title;
     private String comment;
-    private BigDecimal price;
+    private String price;
     private String status;
+    private String statusColour;
 
-    public AddRecordForm(String title, BigDecimal price, String status, String comment) {
+    public RecordForm(String title, String price, String status, String comment) {
         this.title = title;
         this.comment = comment;
         this.price = price;
         this.status = status;
     }
 
-    public AddRecordForm() {
+    public RecordForm() {
     }
 
     public void setTitle(String title) {
@@ -31,7 +32,7 @@ public class AddRecordForm {
         this.comment = comment;
     }
 
-    public void setPrice(BigDecimal price) {
+    public void setPrice(String price) {
         this.price = price;
     }
 
@@ -47,7 +48,7 @@ public class AddRecordForm {
         return comment;
     }
 
-    public BigDecimal getPrice() {
+    public String getPrice() {
         return price;
     }
 
@@ -61,5 +62,13 @@ public class AddRecordForm {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public String getStatusColour() {
+        return statusColour;
+    }
+
+    public void setStatusColour(String statusColour) {
+        this.statusColour = statusColour;
     }
 }

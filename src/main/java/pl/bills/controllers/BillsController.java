@@ -1,16 +1,11 @@
 package pl.bills.controllers;
 
-import com.github.dandelion.datatables.core.ajax.DataSet;
-import com.github.dandelion.datatables.core.ajax.DatatablesCriterias;
-import com.github.dandelion.datatables.core.ajax.DatatablesResponse;
-import com.github.dandelion.datatables.extras.spring3.ajax.DatatablesParams;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-import pl.bills.entities.BillsEntity;
-import pl.bills.forms.AddRecordForm;
+import pl.bills.forms.RecordForm;
 import pl.bills.services.BillsService;
 import pl.bills.services.StatusService;
 
@@ -55,12 +50,12 @@ public class BillsController {
         model.addAttribute("activeMenu", "bills");
         ModelAndView mav = new ModelAndView("newRecord");
         mav.addObject("statusList", statusService.getAllStatuses());
-        mav.addObject("form", new AddRecordForm());
+        mav.addObject("form", new RecordForm());
         return mav;
     }
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public String add(@ModelAttribute AddRecordForm form) {
+    public String add(@ModelAttribute RecordForm form) {
         billsService.addBillFromForm(form);
         return "redirect:bills";
     }

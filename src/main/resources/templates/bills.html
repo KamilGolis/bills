@@ -52,7 +52,7 @@
                             <th dt:sortable="false" width="10%"></th>
                             <th width="10%">Status</th>
                             <th width="15%">Tytuł</th>
-                            <th dt:sortInitDirection="desc" width="10%">Kwota</th>
+                            <th dt:sortInitDirection="desc" dt:sortInitOrder="0" width="10%">Kwota</th>
                             <th width="10%">Data</th>
                             <th width="15%">Wierzyciel</th>
                             <th width="30%">Komentarz</th>
@@ -72,10 +72,10 @@
                             </td>
                             <td>
                                 <button type="button" class="btn btn-primary btn-block btn-sm"
-                                        th:class="${bill.status.statusColour == null}?
+                                        th:class="${bill.statusColour == null}?
                                         'btn btn-default btn-block btn-sm' :
-                                        'btn btn-block btn-sm btn-' + ${bill.status.statusColour}"
-                                        th:text="${bill.status.name}"></button>
+                                        'btn btn-block btn-sm btn-' + ${bill.statusColour}"
+                                        th:text="${bill.status}"></button>
                             </td>
                             <td>
                                 <button type="button" class="btn btn-default-noborder btn-block btn-sm"

@@ -1,21 +1,24 @@
 package pl.bills.services;
 
-import com.github.dandelion.datatables.core.ajax.DataSet;
-import com.github.dandelion.datatables.core.ajax.DatatablesCriterias;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.bills.entities.BillsEntity;
 import pl.bills.entities.CategoryEntity;
 import pl.bills.entities.StatusEntity;
 import pl.bills.enums.CategoryEnum;
-import pl.bills.forms.AddRecordForm;
+import pl.bills.forms.RecordForm;
 import pl.bills.repository.BillsRepository;
 import pl.bills.repository.CategoryRepository;
 import pl.bills.repository.StatusRepository;
 
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.Locale;
 
 import static java.util.stream.Collectors.counting;
 import static java.util.stream.Collectors.groupingBy;
@@ -35,16 +38,16 @@ public class BillsService {
     @Autowired
     StatusRepository statusRepository;
 
-    public Collection<BillsEntity> getBills() {
-        return billsRepository.findAllByCategoryName(CategoryEnum.MAIN.get());
+    public Collection<RecordForm> getBills() {
+        return convertEntityListToRecords(billsRepository.findAllByCategoryName(CategoryEnum.MAIN.get()));
     }
 
-    public BillsEntity getOneBill(Integer id) {
-        return billsRepository.findById(id);
+    public RecordForm getOneBill(Integer id) {
+        return convertEntityToRecord(billsRepository.findById(id));
     }
 
-    public Collection<BillsEntity> getDeletedBills() {
-        return billsRepository.findAllByCategoryName(CategoryEnum.TRASH.get());
+    public Collection<RecordForm> getDeletedBills() {
+        return convertEntityListToRecords(billsRepository.findAllByCategoryName(CategoryEnum.TRASH.get()));
     }
 
     public boolean removeBill(Integer id) {
@@ -87,16 +90,28 @@ public class BillsService {
         return billsEntities;
     }
 
-    public void addBillFromForm(AddRecordForm form) {
+    public void addBillFromForm(RecordForm form) {
         billsRepository.save(createBillFromForm(form));
     }
 
-    private BillsEntity createBillFromForm(AddRecordForm form) {
+    private Collection<RecordForm> convertEntityListToRecords(Collection<BillsEntity> billsEntities) {
+        Collection<RecordForm> collection = new ArrayList<>();
+        for (BillsEntity bill : billsEntities) {
+            collection.add(convertEntityToRecord(bill));
+        }
+        return collection;
+    }
+
+    private BillsEntity createBillFromForm(RecordForm form) {
         BillsEntity bills = new BillsEntity();
 
         bills.setTitle(form.getTitle());
         bills.setComment(form.getComment());
-        bills.setPrice(form.getPrice());
+        try {
+            bills.setPrice(convertPrice(form.getPrice()));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
 
         CategoryEntity category = categoryRepository.findByName(CategoryEnum.MAIN.get());
         if (category == null) {
@@ -119,14 +134,29 @@ public class BillsService {
         return bills;
     }
 
-    public AddRecordForm getFormFromBillsEntity(BillsEntity bill) {
-        AddRecordForm form = new AddRecordForm();
+    private RecordForm convertEntityToRecord(BillsEntity bill) {
+        RecordForm form = new RecordForm();
         form.setTitle(bill.getTitle());
         form.setStatus(bill.getStatus().getName());
+        form.setStatusColour(bill.getStatus().getStatusColour());
         form.setComment(bill.getComment());
-        form.setPrice(bill.getPrice());
+        form.setPrice(convertPrice(bill.getPrice()));
         form.setId(bill.getId());
         return form;
+    }
+
+    private String convertPrice(BigDecimal value) {
+        NumberFormat formatter = NumberFormat.getCurrencyInstance(Locale.getDefault());
+        formatter.setMaximumFractionDigits(2);
+        formatter.setMinimumFractionDigits(2);
+        return formatter.format(value);
+    }
+
+    private BigDecimal convertPrice(String value) throws ParseException {
+            DecimalFormat df = (DecimalFormat) NumberFormat.getNumberInstance();
+            df.setParseBigDecimal(true);
+            BigDecimal bd = (BigDecimal) df.parseObject(value);
+            return bd;
     }
 
     public String totalBillsPrice() {

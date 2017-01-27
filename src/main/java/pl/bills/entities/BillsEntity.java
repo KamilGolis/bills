@@ -1,11 +1,11 @@
 package pl.bills.entities;
 
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.format.annotation.NumberFormat;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.Date;
 
 /**
  * Created by trot on 08.01.17.
@@ -21,14 +21,14 @@ public class BillsEntity {
     @Column(length = 200)
     private String comment;
 
+    @NumberFormat(style = NumberFormat.Style.CURRENCY)
     private BigDecimal price;
 
     @Column(length = 50)
     private String title;
 
-    @Temporal(TemporalType.DATE)
-    @DateTimeFormat
-    private Date date;
+    @DateTimeFormat(pattern = "dd.MM.yyyy")
+    private LocalDate date;
 
     @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
@@ -52,11 +52,11 @@ public class BillsEntity {
         this.loanHolder = loanHolder;
     }
 
-    public Date getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 
@@ -119,6 +119,6 @@ public class BillsEntity {
 
     @Override
     public String toString() {
-        return  title + " - " + price + " PLN";
+        return title + " - " + price + " PLN";
     }
 }

@@ -61,10 +61,10 @@
                             </td>
                             <td>
                                 <button type="button" class="btn btn-primary btn-block btn-sm"
-                                        th:class="${bill.status.statusColour == null}?
+                                        th:class="${bill.statusColour == null}?
                                         'btn btn-default btn-block btn-sm' :
-                                        'btn btn-block btn-sm btn-' + ${bill.status.statusColour}"
-                                        th:text="${bill.status.name}"></button>
+                                        'btn btn-block btn-sm btn-' + ${bill.statusColour}"
+                                        th:text="${bill.status}"></button>
                             </td>
                             <td>
                                 <button type="button" class="btn btn-default-noborder btn-block btn-sm"
