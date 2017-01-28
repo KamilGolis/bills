@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-      xmlns:dt="http://github.com/dandelion/datatables">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
@@ -10,10 +9,15 @@
     <link rel="shortcut icon" type="image/png" th:href="@{/images/favicon.png}"/>
 
     <title>Rachunki</title>
-    <!-- Bootstrap core CSS -->
     <link th:href="@{css/bootstrap.css}" rel="stylesheet"/>
-    <!-- Custom styles for this template -->
     <link th:href="@{css/dashboard.css}" rel="stylesheet"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script th:src="@{js/bootstrap.min.js}"></script>
+
+    <!-- Datatables jquery -->
+    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.13/css/jquery.dataTables.css"/>
+    <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.13/js/jquery.dataTables.js"></script>
+
 </head>
 
 <body>
@@ -35,13 +39,13 @@
 
                 <div class="table-responsive">
 
-                    <table id="dataTableId" dt:table="true" dt:sortable="true" dt:filterable="true">
+                    <table id="trashTable">
                         <thead>
                         <tr>
-                            <th dt:sortable="false" width="10%"></th>
-                            <th width="10%">Status</th>
-                            <th width="15%">Tytuł</th>
-                            <th dt:sortInitDirection="desc" width="10%">Kwota</th>
+                            <th width="10%"></th>
+                            <th width="15%">Status</th>
+                            <th width="10%">Tytuł</th>
+                            <th width="10%">Kwota</th>
                             <th width="10%">Data</th>
                             <th width="15%">Wierzyciel</th>
                             <th width="30%">Komentarz</th>
@@ -60,11 +64,23 @@
                                 </div>
                             </td>
                             <td>
-                                <button type="button" class="btn btn-primary btn-block btn-sm"
-                                        th:class="${bill.statusColour == null}?
-                                        'btn btn-default btn-block btn-sm' :
-                                        'btn btn-block btn-sm btn-' + ${bill.statusColour}"
-                                        th:text="${bill.status}"></button>
+                                <div class="btn-group" role="group">
+                                    <button type="button" class="btn btn-primary btn-sm"
+                                            th:class="${bill.statusColour == null}?
+                                        'btn btn-default custom btn-sm' :
+                                        'btn btn-sm custom btn-' + ${bill.statusColour}"
+                                            th:text="${bill.status}"></button>
+                                    <button type="button" class="btn btn-primary btn-sm"
+                                            th:class="${bill.statusColour == null}?
+                                        'btn btn-default btn-sm' :
+                                        'btn btn-sm btn-' + ${bill.statusColour}">
+                                        <span th:class="${bill.categoryIcon == null}?
+                                        'glyphicon glyphicon-euro' :
+                                        'glyphicon ' + ${bill.categoryIcon}"
+                                              class="glyphicon glyphicon-edit" aria-hidden="true">
+                                        </span>
+                                    </button>
+                                </div>
                             </td>
                             <td>
                                 <button type="button" class="btn btn-default-noborder btn-block btn-sm"
@@ -95,12 +111,20 @@
         </div>
     </div>
 </div>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-<script th:src="@{js/bootstrap.min.js}"></script>
 <script type="text/javascript">
     $(window).load(function () {
         $(".loader").fadeOut("slow");
     })
+</script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#trashTable').DataTable({
+            language: {
+                url: '//cdn.datatables.net/plug-ins/1.10.13/i18n/Polish.json'
+            }
+        });
+    });
 </script>
 </body>
 

@@ -11,17 +11,9 @@ import pl.bills.repository.BillsRepository;
 import pl.bills.repository.CategoryRepository;
 import pl.bills.repository.StatusRepository;
 
-import java.math.BigDecimal;
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
 import java.text.ParseException;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Comparator;
-import java.util.Locale;
-
-import static java.util.stream.Collectors.counting;
-import static java.util.stream.Collectors.groupingBy;
+import java.util.stream.Collectors;
 
 /**
  * Created by trot on 09.01.17.
@@ -38,8 +30,14 @@ public class BillsService {
     @Autowired
     StatusRepository statusRepository;
 
+    @Autowired
+    CountingServices countingServices;
+
     public Collection<RecordForm> getBills() {
-        return convertEntityListToRecords(billsRepository.findAllByCategoryName(CategoryEnum.MAIN.get()));
+        return convertEntityListToRecords(billsRepository.findAll()
+                .stream()
+                .filter(b -> !b.getCategory().getName().equals(CategoryEnum.TRASH.get()))
+                .collect(Collectors.toList()));
     }
 
     public RecordForm getOneBill(Integer id) {
@@ -65,6 +63,7 @@ public class BillsService {
     public void undoBill(Integer id) {
         BillsEntity bill = billsRepository.findById(id);
         if (bill != null) {
+            // Set MAIN category for undo bill.
             CategoryEntity category = categoryRepository.findByName(CategoryEnum.MAIN.get());
             if (category != null) {
                 bill.setCategory(category);
@@ -95,11 +94,9 @@ public class BillsService {
     }
 
     private Collection<RecordForm> convertEntityListToRecords(Collection<BillsEntity> billsEntities) {
-        Collection<RecordForm> collection = new ArrayList<>();
-        for (BillsEntity bill : billsEntities) {
-            collection.add(convertEntityToRecord(bill));
-        }
-        return collection;
+        return billsEntities.stream()
+                .map(x -> convertEntityToRecord(x))
+                .collect(Collectors.toList());
     }
 
     private BillsEntity createBillFromForm(RecordForm form) {
@@ -108,11 +105,12 @@ public class BillsService {
         bills.setTitle(form.getTitle());
         bills.setComment(form.getComment());
         try {
-            bills.setPrice(convertPrice(form.getPrice()));
+            bills.setPrice(countingServices.convertPrice(form.getPrice()));
         } catch (ParseException e) {
             e.printStackTrace();
         }
 
+        //TODO implement category selector, now only MAIN is avaible.
         CategoryEntity category = categoryRepository.findByName(CategoryEnum.MAIN.get());
         if (category == null) {
             category.setName(CategoryEnum.MAIN.get());
@@ -140,49 +138,11 @@ public class BillsService {
         form.setStatus(bill.getStatus().getName());
         form.setStatusColour(bill.getStatus().getStatusColour());
         form.setComment(bill.getComment());
-        form.setPrice(convertPrice(bill.getPrice()));
+        form.setPrice(countingServices.convertPrice(bill.getPrice()));
         form.setId(bill.getId());
+        form.setCategoryIcon(bill.getCategory().getIcon());
+        form.setCategory(bill.getCategory().getName());
         return form;
-    }
-
-    private String convertPrice(BigDecimal value) {
-        NumberFormat formatter = NumberFormat.getCurrencyInstance(Locale.getDefault());
-        formatter.setMaximumFractionDigits(2);
-        formatter.setMinimumFractionDigits(2);
-        return formatter.format(value);
-    }
-
-    private BigDecimal convertPrice(String value) throws ParseException {
-            DecimalFormat df = (DecimalFormat) NumberFormat.getNumberInstance();
-            df.setParseBigDecimal(true);
-            BigDecimal bd = (BigDecimal) df.parseObject(value);
-            return bd;
-    }
-
-    public String totalBillsPrice() {
-        return billsRepository.findAllByCategoryName(CategoryEnum.MAIN.get())
-                .stream()
-                .map(x -> (x.getPrice() == null ? BigDecimal.ZERO : x.getPrice()))
-                .reduce((x, y) -> x.add(y))
-                .get().toString() + " PLN";
-    }
-
-    public String biggestBillPrice() {
-        BillsEntity be = billsRepository.findAllByCategoryName(CategoryEnum.MAIN.get()).stream()
-                .max(Comparator.comparing(i -> (i.getPrice() == null ? BigDecimal.ZERO : i.getPrice())))
-                .get();
-        return be.toString();
-    }
-
-    public String mostFrequentBill() {
-        String counter = billsRepository.findAllByCategoryName(CategoryEnum.MAIN.get())
-                .stream()
-                .collect(groupingBy(p -> p.getTitle(), counting()))
-                .entrySet()
-                .stream()
-                .max(Comparator.comparing(i -> i.getValue()))
-                .get().getKey();
-        return counter;
     }
 
 }

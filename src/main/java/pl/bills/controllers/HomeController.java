@@ -5,6 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import pl.bills.services.BillsService;
+import pl.bills.services.CountingServices;
 
 /**
  * Created by trot on 09.01.17.
@@ -14,7 +15,7 @@ import pl.bills.services.BillsService;
 public class HomeController {
 
     @Autowired
-    BillsService billsService;
+    CountingServices countingServices;
 
     @RequestMapping("/")
     public String index() {
@@ -24,9 +25,9 @@ public class HomeController {
     @RequestMapping("/home")
     public String home(Model model) {
         model.addAttribute("activeMenu", "home");
-        model.addAttribute("total", billsService.totalBillsPrice());
-        model.addAttribute("biggest", billsService.biggestBillPrice());
-        model.addAttribute("frequent", billsService.mostFrequentBill());
+        model.addAttribute("total", countingServices.totalBillsPrice());
+        model.addAttribute("biggest", countingServices.biggestBillPrice());
+        model.addAttribute("frequent", countingServices.mostFrequentBill());
         return "home";
     }
 }

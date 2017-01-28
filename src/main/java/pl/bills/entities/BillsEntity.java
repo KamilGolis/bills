@@ -119,6 +119,6 @@ public class BillsEntity {
 
     @Override
     public String toString() {
-        return title + " - " + price + " PLN";
+        return title + " - " + price;
     }
 }

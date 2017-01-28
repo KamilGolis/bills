@@ -20,6 +20,8 @@ public class CategoryEntity {
     @Column(unique = true)
     private String name;
 
+    private String icon;
+
     @OneToMany(mappedBy = "category")
     private Set<BillsEntity> billsEntity;
 
@@ -52,5 +54,13 @@ public class CategoryEntity {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getIcon() {
+        return icon;
+    }
+
+    public void setIcon(String icon) {
+        this.icon = icon;
     }
 }

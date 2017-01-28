@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+</head>
+<body>
+
+<div th:fragment="maincontent">
+
+    <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+
+        <div class="row">
+            <h1 class="page-header">Lista wszystkich rachunków</h1>
+
+            <div class="btn-group" role="group">
+                <a data-toggle="modal" data-target="#myModal" role="button" class="btn btn-success">
+                    <div>
+                        <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
+                        Dodaj nowy rekord
+                    </div>
+                </a>
+                <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#myModal">Usuń rekordy
+                    z listy
+                </button>
+            </div>
+            <h2 class="sub-header"></h2>
+
+            <div class="table-responsive">
+
+                <table id="dataTableId">
+                    <!--dt:table="true" dt:sortable="true" dt:filterable="true">-->
+
+                    <thead>
+                    <tr>
+                        <th width="10%"></th>
+                        <th width="15%">Status</th>
+                        <th width="10%">Tytuł</th>
+                        <th width="10%">Kwota</th>
+                        <th width="10%">Data</th>
+                        <th width="15%">Wierzyciel</th>
+                        <th width="30%">Komentarz</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="bill : ${billsList}">
+                        <td>
+                            <div class="btn-group" role="group">
+                                <a th:href="@{/remove(id=${bill.id})}" role="button" class="btn btn-danger btn-sm">
+                                    <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                                </a>
+                                <a th:href="@{/modify(id=${bill.id})}" class="btn btn-success btn-sm" role="button">
+                                    <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+                                </a>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="btn-group" role="group">
+                                <button type="button" class="btn btn-primary btn-sm"
+                                        th:class="${bill.statusColour == null}?
+                                        'btn btn-default custom btn-sm' :
+                                        'btn btn-sm custom btn-' + ${bill.statusColour}"
+                                        th:text="${bill.status}"></button>
+                                <button type="button" class="btn btn-primary btn-sm"
+                                        th:class="${bill.statusColour == null}?
+                                        'btn btn-default btn-sm' :
+                                        'btn btn-sm btn-' + ${bill.statusColour}">
+                                        <span th:class="${bill.categoryIcon == null}?
+                                        'glyphicon glyphicon-euro' :
+                                        'glyphicon ' + ${bill.categoryIcon}"
+                                              class="glyphicon glyphicon-edit" aria-hidden="true">
+                                        </span>
+                                </button>
+                            </div>
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-default-noborder btn-block btn-sm"
+                                    th:text="${bill.title}"></button>
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-default-noborder btn-block btn-sm"
+                                    th:text="${bill.price}"></button>
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-default-noborder btn-block btn-sm"
+                                    th:text="10.01.2017"></button>
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-default-noborder btn-block btn-sm"
+                                    th:text="MM"></button>
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-default-noborder btn-block btn-sm"
+                                    th:text="${bill.comment == ''}? '-' : ${bill.comment}"></button>
+                        </td>
+                    </tr>
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div>
+</body>
+
+</html>

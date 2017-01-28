@@ -13,6 +13,8 @@ public class RecordForm {
     private String price;
     private String status;
     private String statusColour;
+    private String categoryIcon;
+    private String category;
 
     public RecordForm(String title, String price, String status, String comment) {
         this.title = title;
@@ -70,5 +72,21 @@ public class RecordForm {
 
     public void setStatusColour(String statusColour) {
         this.statusColour = statusColour;
+    }
+
+    public String getCategoryIcon() {
+        return categoryIcon;
+    }
+
+    public void setCategoryIcon(String categoryIcon) {
+        this.categoryIcon = categoryIcon;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
     }
 }

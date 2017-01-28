@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-      xmlns:dt="http://github.com/dandelion/datatables">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
@@ -10,12 +9,22 @@
     <link rel="shortcut icon" type="image/png" th:href="@{/images/favicon.png}"/>
 
     <title>Rachunki</title>
-    <!-- Bootstrap core CSS -->
     <link th:href="@{css/bootstrap.css}" rel="stylesheet"/>
-    <!-- Custom styles for this template -->
     <link th:href="@{css/dashboard.css}" rel="stylesheet"/>
-</head>
+    <link rel="stylesheet"
+          th:href="@{bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css}"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script th:src="@{js/bootstrap.min.js}"></script>
+    <script type="text/javascript" th:src="@{bower_components/moment/min/moment.min.js}"></script>
+    <script type="text/javascript"
+            th:src="@{bower_components/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js}"></script>
+    <script type="text/javascript" th:src="@{bower_components/moment/locale/pl.js}"></script>
 
+    <!-- Datatables jquery -->
+    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.13/css/jquery.dataTables.css"/>
+    <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.13/js/jquery.dataTables.js"></script>
+
+</head>
 <body>
 <div class="loader"></div>
 <nav th:replace="fragments/navigation :: top"></nav>
@@ -23,96 +32,53 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-sm-3 col-md-2 sidebar">
-
             <div th:replace="fragments/menu :: left (${activeMenu})"></div>
-
         </div>
 
-        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+        <div th:include="fragments/mainContent :: maincontent"></div>
 
-            <div class="row">
-                <h1 class="page-header">Lista wszystkich rachunków</h1>
+    </div>
+</div>
 
-                <div class="btn-group" role="group">
-                    <a th:href="@{/addrecord}" role="button" class="btn btn-success">
-                        <div>
-                            <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
-                            Dodaj nowy rekord
-                        </div>
-                    </a>
-                    <button type="button" class="btn btn-danger">Usuń rekordy z listy</button>
-                </div>
-                <h2 class="sub-header"></h2>
-
-                <div class="table-responsive">
-
-                    <table id="dataTableId" dt:table="true" dt:sortable="true" dt:filterable="true">
-                        <thead>
-                        <tr>
-                            <th dt:sortable="false" width="10%"></th>
-                            <th width="10%">Status</th>
-                            <th width="15%">Tytuł</th>
-                            <th dt:sortInitDirection="desc" dt:sortInitOrder="0" width="10%">Kwota</th>
-                            <th width="10%">Data</th>
-                            <th width="15%">Wierzyciel</th>
-                            <th width="30%">Komentarz</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr th:each="bill : ${billsList}">
-                            <td>
-                                <div class="btn-group" role="group">
-                                    <a th:href="@{/remove(id=${bill.id})}" role="button" class="btn btn-danger btn-sm">
-                                        <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
-                                    </a>
-                                    <a th:href="@{/modify(id=${bill.id})}" class="btn btn-success btn-sm" role="button">
-                                        <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
-                                    </a>
-                                </div>
-                            </td>
-                            <td>
-                                <button type="button" class="btn btn-primary btn-block btn-sm"
-                                        th:class="${bill.statusColour == null}?
-                                        'btn btn-default btn-block btn-sm' :
-                                        'btn btn-block btn-sm btn-' + ${bill.statusColour}"
-                                        th:text="${bill.status}"></button>
-                            </td>
-                            <td>
-                                <button type="button" class="btn btn-default-noborder btn-block btn-sm"
-                                        th:text="${bill.title}"></button>
-                            </td>
-                            <td>
-                                <button type="button" class="btn btn-default-noborder btn-block btn-sm"
-                                        th:text="${bill.price}"></button>
-                            </td>
-                            <td>
-                                <button type="button" class="btn btn-default-noborder btn-block btn-sm"
-                                        th:text="10.01.2017"></button>
-                            </td>
-                            <td>
-                                <button type="button" class="btn btn-default-noborder btn-block btn-sm"
-                                        th:text="MM"></button>
-                            </td>
-                            <td>
-                                <button type="button" class="btn btn-default-noborder btn-block btn-sm"
-                                        th:text="${bill.comment == ''}? '-' : ${bill.comment}"></button>
-                            </td>
-                        </tr>
-
-                        </tbody>
-                    </table>
-                </div>
+<div class="modal fade bs-example-modal-lg" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Dodaj nowy rekord</h4>
+            </div>
+            <div class="modal-body">
+                <div th:replace="fragments/editor :: newrecord"></div>
             </div>
         </div>
     </div>
 </div>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-<script th:src="@{js/bootstrap.min.js}"></script>
+
 <script type="text/javascript">
     $(window).load(function () {
         $(".loader").fadeOut("slow");
     })
 </script>
+<script th:inline="javascript">
+    $(function () {
+        $("#datetimepicker1").datetimepicker({
+            locale: "pl",
+            calendarWeeks: true,
+            format: "L"
+        });
+    });
+</script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#dataTableId').DataTable({
+            language: {
+                url: '//cdn.datatables.net/plug-ins/1.10.13/i18n/Polish.json'
+            }
+        });
+    });
+</script>
+
 </body>
 
 </html>

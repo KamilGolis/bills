@@ -27,6 +27,8 @@ public class BillsController {
         model.addAttribute("activeMenu", "bills");
         ModelAndView mav = new ModelAndView("bills");
         mav.addObject("billsList", billsService.getBills());
+        mav.addObject("form", new RecordForm());
+        mav.addObject("statusList", statusService.getAllStatuses());
         return mav;
     }
 
@@ -43,15 +45,6 @@ public class BillsController {
             return "redirect:bills";
         }
         return "bills";
-    }
-
-    @RequestMapping(value = "/addrecord")
-    public ModelAndView addForm(Model model) {
-        model.addAttribute("activeMenu", "bills");
-        ModelAndView mav = new ModelAndView("newRecord");
-        mav.addObject("statusList", statusService.getAllStatuses());
-        mav.addObject("form", new RecordForm());
-        return mav;
     }
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)

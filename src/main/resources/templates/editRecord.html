@@ -11,13 +11,19 @@
     <title>Rachunki</title>
     <link th:href="@{css/bootstrap.css}" rel="stylesheet"/>
     <link th:href="@{css/dashboard.css}" rel="stylesheet"/>
-    <link rel="stylesheet" th:href="@{bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css}" />
-
+    <link rel="stylesheet"
+          th:href="@{bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css}"/>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <script th:src="@{js/bootstrap.min.js}"></script>
     <script type="text/javascript" th:src="@{bower_components/moment/min/moment.min.js}"></script>
-    <script type="text/javascript" th:src="@{bower_components/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js}"></script>
+    <script type="text/javascript"
+            th:src="@{bower_components/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js}"></script>
     <script type="text/javascript" th:src="@{bower_components/moment/locale/pl.js}"></script>
+
+    <!-- Datatables jquery -->
+    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.13/css/jquery.dataTables.css"/>
+    <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.13/js/jquery.dataTables.js"></script>
+
 </head>
 
 <body>
@@ -27,32 +33,79 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-sm-3 col-md-2 sidebar">
-
             <div th:replace="fragments/menu :: left (${activeMenu})"></div>
-
         </div>
 
-        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+        <div th:include="fragments/mainContent :: maincontent"></div>
 
-            <div th:replace="fragments/editor :: editrecord"></div>
+    </div>
+</div>
 
+
+<div class="modal fade bs-example-modal-lg" id="editModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="editModalLabel">Edytuj rekord</h4>
+            </div>
+            <div class="modal-body">
+                <div th:replace="fragments/editor :: editrecord"></div>
+            </div>
         </div>
     </div>
 </div>
+
+<div class="modal fade bs-example-modal-lg" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Dodaj nowy rekord</h4>
+            </div>
+            <div class="modal-body">
+                <div th:replace="fragments/editor :: newrecord"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script type="text/javascript">
-    $(window).load(function() {
+    $(window).load(function () {
         $(".loader").fadeOut("slow");
     })
 </script>
 <script th:inline="javascript">
     $(function () {
-        $("#datetimepicker2").datetimepicker({
+        $("#datetimepicker1").datetimepicker({
             locale: "pl",
             calendarWeeks: true,
             format: "L"
         });
     });
 </script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#dataTableId').DataTable({
+            language: {
+                url: '//cdn.datatables.net/plug-ins/1.10.13/i18n/Polish.json'
+            }
+        });
+    });
+</script>
+
+<script type="text/javascript">
+    $('#editModal').modal('show')
+</script>
+
+<script type="text/javascript">
+    $('#editModal').on('hidden.bs.modal', function (e) {
+        window.location.replace("/bills");
+    })
+</script>
+
 </body>
 
 </html>

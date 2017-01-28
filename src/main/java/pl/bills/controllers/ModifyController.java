@@ -25,10 +25,11 @@ public class ModifyController {
     @Autowired
     StatusService statusService;
 
-    @RequestMapping(value = "/modify")
+    @RequestMapping(value = "/modify", method = RequestMethod.GET)
     public ModelAndView modifyForm(@RequestParam Integer id, Model model) {
         model.addAttribute("activeMenu", "bills");
         ModelAndView mav = new ModelAndView("editRecord");
+        mav.addObject("billsList", billsService.getBills());
         mav.addObject("statusList", statusService.getAllStatuses());
         RecordForm form = billsService.getOneBill(id);
         mav.addObject("form", form);
