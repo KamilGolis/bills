@@ -4,14 +4,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.bills.entities.BillsEntity;
 import pl.bills.entities.CategoryEntity;
-import pl.bills.entities.StatusEntity;
 import pl.bills.enums.CategoryEnum;
-import pl.bills.forms.RecordForm;
 import pl.bills.repository.BillsRepository;
 import pl.bills.repository.CategoryRepository;
 import pl.bills.repository.StatusRepository;
 
-import java.text.ParseException;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
@@ -33,19 +30,23 @@ public class BillsService {
     @Autowired
     CountingServices countingServices;
 
-    public Collection<RecordForm> getBills() {
-        return convertEntityListToRecords(billsRepository.findAll()
+    public Collection<BillsEntity> getBills() {
+//        return convertEntityListToRecords(billsRepository.findAll()
+//                .stream()
+//                .filter(b -> !b.getCategory().getName().equals(CategoryEnum.TRASH.get()))
+//                .collect(Collectors.toList()));
+        return billsRepository.findAll()
                 .stream()
                 .filter(b -> !b.getCategory().getName().equals(CategoryEnum.TRASH.get()))
-                .collect(Collectors.toList()));
+                .collect(Collectors.toList());
     }
 
-    public RecordForm getOneBill(Integer id) {
-        return convertEntityToRecord(billsRepository.findById(id));
+    public BillsEntity getOneBill(Integer id) {
+        return billsRepository.findById(id);
     }
 
-    public Collection<RecordForm> getDeletedBills() {
-        return convertEntityListToRecords(billsRepository.findAllByCategoryName(CategoryEnum.TRASH.get()));
+    public Collection<BillsEntity> getDeletedBills() {
+        return billsRepository.findAllByCategoryName(CategoryEnum.TRASH.get());
     }
 
     public boolean removeBill(Integer id) {
@@ -89,60 +90,64 @@ public class BillsService {
         return billsEntities;
     }
 
-    public void addBillFromForm(RecordForm form) {
-        billsRepository.save(createBillFromForm(form));
+    public void addBill(BillsEntity billsEntity) {
+        billsRepository.save(billsEntity);
     }
 
-    private Collection<RecordForm> convertEntityListToRecords(Collection<BillsEntity> billsEntities) {
-        return billsEntities.stream()
-                .map(x -> convertEntityToRecord(x))
-                .collect(Collectors.toList());
-    }
+//    public void addBillFromForm(RecordForm form) {
+//        billsRepository.save(createBillFromForm(form));
+//    }
 
-    private BillsEntity createBillFromForm(RecordForm form) {
-        BillsEntity bills = new BillsEntity();
+//    private Collection<RecordForm> convertEntityListToRecords(Collection<BillsEntity> billsEntities) {
+//        return billsEntities.stream()
+//                .map(x -> convertEntityToRecord(x))
+//                .collect(Collectors.toList());
+//    }
 
-        bills.setTitle(form.getTitle());
-        bills.setComment(form.getComment());
-        try {
-            bills.setPrice(countingServices.convertPrice(form.getPrice()));
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+//    private BillsEntity createBillFromForm(RecordForm form) {
+//        BillsEntity bills = new BillsEntity();
+//
+//        bills.setTitle(form.getTitle());
+//        bills.setComment(form.getComment());
+//        try {
+//            bills.setPrice(countingServices.convertPrice(form.getPrice()));
+//        } catch (ParseException e) {
+//            e.printStackTrace();
+//        }
+//
+//        //TODO implement category selector, now only MAIN is avaible.
+//        CategoryEntity category = categoryRepository.findByName(CategoryEnum.MAIN.get());
+//        if (category == null) {
+//            category.setName(CategoryEnum.MAIN.get());
+//            categoryRepository.save(category);
+//        }
+//        bills.setCategory(category);
+//
+//        StatusEntity status = statusRepository.findByName(form.getStatus());
+//        if (status != null) {
+//            bills.setStatus(status);
+//        } else {
+//            status.setName(form.getStatus());
+//            statusRepository.save(status);
+//        }
+//
+//        if (form.getId() != null) {
+//            bills.setId(form.getId());
+//        }
+//        return bills;
+//    }
 
-        //TODO implement category selector, now only MAIN is avaible.
-        CategoryEntity category = categoryRepository.findByName(CategoryEnum.MAIN.get());
-        if (category == null) {
-            category.setName(CategoryEnum.MAIN.get());
-            categoryRepository.save(category);
-        }
-        bills.setCategory(category);
-
-        StatusEntity status = statusRepository.findByName(form.getStatus());
-        if (status != null) {
-            bills.setStatus(status);
-        } else {
-            status.setName(form.getStatus());
-            statusRepository.save(status);
-        }
-
-        if (form.getId() != null) {
-            bills.setId(form.getId());
-        }
-        return bills;
-    }
-
-    private RecordForm convertEntityToRecord(BillsEntity bill) {
-        RecordForm form = new RecordForm();
-        form.setTitle(bill.getTitle());
-        form.setStatus(bill.getStatus().getName());
-        form.setStatusColour(bill.getStatus().getStatusColour());
-        form.setComment(bill.getComment());
-        form.setPrice(countingServices.convertPrice(bill.getPrice()));
-        form.setId(bill.getId());
-        form.setCategoryIcon(bill.getCategory().getIcon());
-        form.setCategory(bill.getCategory().getName());
-        return form;
-    }
+//    private RecordForm convertEntityToRecord(BillsEntity bill) {
+//        RecordForm form = new RecordForm();
+//        form.setTitle(bill.getTitle());
+//        form.setStatus(bill.getStatus().getName());
+//        form.setStatusColour(bill.getStatus().getStatusColour());
+//        form.setComment(bill.getComment());
+//        form.setPrice(countingServices.convertPrice(bill.getPrice()));
+//        form.setId(bill.getId());
+//        form.setCategoryIcon(bill.getCategory().getIcon());
+//        form.setCategory(bill.getCategory().getName());
+//        return form;
+//    }
 
 }

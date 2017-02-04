@@ -1,6 +1,9 @@
 package pl.bills.entities;
 
+import org.hibernate.validator.constraints.NotEmpty;
+
 import javax.persistence.*;
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.util.Set;
 
@@ -16,7 +19,8 @@ public class StatusEntity {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "status_id")
     private Integer id;
-    @NotNull
+
+    @NotEmpty
     @Column(length = 50, unique = true)
     private String name;
 

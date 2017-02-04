@@ -3,11 +3,17 @@ package pl.bills.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
-import pl.bills.forms.RecordForm;
+import pl.bills.entities.BillsEntity;
 import pl.bills.services.BillsService;
 import pl.bills.services.StatusService;
+
+import javax.validation.Valid;
 
 /**
  * Created by trot on 19.01.17.
@@ -27,7 +33,7 @@ public class BillsController {
         model.addAttribute("activeMenu", "bills");
         ModelAndView mav = new ModelAndView("bills");
         mav.addObject("billsList", billsService.getBills());
-        mav.addObject("form", new RecordForm());
+        mav.addObject("form", new BillsEntity());
         mav.addObject("statusList", statusService.getAllStatuses());
         return mav;
     }
@@ -48,8 +54,12 @@ public class BillsController {
     }
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public String add(@ModelAttribute RecordForm form) {
-        billsService.addBillFromForm(form);
+    public String add(@Valid @ModelAttribute BillsEntity billsEntity, BindingResult bindingResult) {
+//        billsService.addBillFromForm(form);
+        if (bindingResult.hasErrors()) {
+            return "error";
+        }
+        billsService.addBill(billsEntity);
         return "redirect:bills";
     }
 

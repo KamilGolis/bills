@@ -10,7 +10,7 @@ import java.text.ParseException;
 /**
  * Created by trot on 03.02.17.
  */
-public class PriceConverter implements Converter<String, BigDecimal> {
+public class PriceStringToDecimalConverter implements Converter<String, BigDecimal> {
 
     @Override
     public BigDecimal convert(String source) {

@@ -25,20 +25,20 @@ public class CountingServices {
     @Autowired
     BillsRepository billsRepository;
 
-    public String totalBillsPrice() {
+    public BigDecimal totalBillsPrice() {
         return billsRepository.findAllByCategoryName(CategoryEnum.MAIN.get())
                 .stream()
                 .map(x -> (x.getPrice() == null ? BigDecimal.ZERO : x.getPrice()))
                 .reduce((x, y) -> x.add(y))
-                .map(b -> convertPrice(b))
+                //.map(b -> convertPrice(b))
                 .get();
     }
 
-    public String biggestBillPrice() {
+    public BigDecimal biggestBillPrice() {
         BillsEntity be = billsRepository.findAllByCategoryName(CategoryEnum.MAIN.get()).stream()
                 .max(Comparator.comparing(i -> (i.getPrice() == null ? BigDecimal.ZERO : i.getPrice())))
                 .get();
-        return convertPrice(be.getPrice());
+        return be.getPrice();
     }
 
     public String mostFrequentBill() {
@@ -52,17 +52,17 @@ public class CountingServices {
         return counter;
     }
 
-    public String convertPrice(BigDecimal value) {
-        NumberFormat formatter = NumberFormat.getCurrencyInstance(Locale.getDefault());
-        formatter.setMaximumFractionDigits(2);
-        formatter.setMinimumFractionDigits(2);
-        return formatter.format(value);
-    }
-
-    public BigDecimal convertPrice(String value) throws ParseException {
-        DecimalFormat df = (DecimalFormat) NumberFormat.getNumberInstance();
-        df.setParseBigDecimal(true);
-        BigDecimal bd = (BigDecimal) df.parseObject(value);
-        return bd;
-    }
+//    public String convertPrice(BigDecimal value) {
+//        NumberFormat formatter = NumberFormat.getCurrencyInstance(Locale.getDefault());
+//        formatter.setMaximumFractionDigits(2);
+//        formatter.setMinimumFractionDigits(2);
+//        return formatter.format(value);
+//    }
+//
+//    public BigDecimal convertPrice(String value) throws ParseException {
+//        DecimalFormat df = (DecimalFormat) NumberFormat.getNumberInstance();
+//        df.setParseBigDecimal(true);
+//        BigDecimal bd = (BigDecimal) df.parseObject(value);
+//        return bd;
+//    }
 }

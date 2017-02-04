@@ -19,4 +19,8 @@ public class StatusService {
     public Collection<StatusEntity> getAllStatuses() {
         return statusRepository.findAll();
     }
+
+    public StatusEntity getStatus(String name) {
+        return statusRepository.findByName(name);
+    }
 }
