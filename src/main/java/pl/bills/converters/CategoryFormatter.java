@@ -7,6 +7,7 @@ import pl.bills.entities.CategoryEntity;
 import pl.bills.services.CategoryService;
 
 import java.text.ParseException;
+import java.util.Collection;
 import java.util.Locale;
 
 /**
@@ -19,7 +20,12 @@ public class CategoryFormatter implements Formatter<CategoryEntity> {
 
     @Override
     public CategoryEntity parse(String categoryName, Locale locale) throws ParseException {
-        return categoryService.getDefaultCategory();
+        Collection<CategoryEntity> categtyList = categoryService.getAll();
+        return categtyList.stream()
+                .filter(c -> c.getName().equals(categoryName))
+                .findAny()
+                .get();
+
     }
 
     @Override

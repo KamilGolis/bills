@@ -19,9 +19,12 @@
                         Dodaj nowy rekord
                     </div>
                 </a>
-                <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#myModal">Usuń rekordy
-                    z listy
-                </button>
+                <a th:href="@{/removeall}" role="button" class="btn btn-danger">
+                    <div>
+                        <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                        Usuń rekordy z listy
+                    </div>
+                </a>
             </div>
             <h2 class="sub-header"></h2>
 

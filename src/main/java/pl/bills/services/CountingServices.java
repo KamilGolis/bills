@@ -52,17 +52,4 @@ public class CountingServices {
         return counter;
     }
 
-//    public String convertPrice(BigDecimal value) {
-//        NumberFormat formatter = NumberFormat.getCurrencyInstance(Locale.getDefault());
-//        formatter.setMaximumFractionDigits(2);
-//        formatter.setMinimumFractionDigits(2);
-//        return formatter.format(value);
-//    }
-//
-//    public BigDecimal convertPrice(String value) throws ParseException {
-//        DecimalFormat df = (DecimalFormat) NumberFormat.getNumberInstance();
-//        df.setParseBigDecimal(true);
-//        BigDecimal bd = (BigDecimal) df.parseObject(value);
-//        return bd;
-//    }
 }
