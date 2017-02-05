@@ -4,6 +4,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.NumberFormat;
 
 import javax.persistence.*;
+import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
@@ -27,15 +28,18 @@ public class BillsEntity {
     @Column(length = 50)
     private String title;
 
+    @Valid
     @DateTimeFormat(pattern = "dd.MM.yyyy")
     private LocalDate date;
 
     @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
+    @Valid
     private CategoryEntity category;
 
     @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     @JoinColumn(name = "status_id")
+    @Valid
     private StatusEntity status;
 
     @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)

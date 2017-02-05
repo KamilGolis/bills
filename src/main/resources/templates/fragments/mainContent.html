@@ -19,9 +19,12 @@
                         Dodaj nowy rekord
                     </div>
                 </a>
-                <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#myModal">Usuń rekordy
-                    z listy
-                </button>
+                <a th:href="@{/removeall}" role="button" class="btn btn-danger">
+                    <div>
+                        <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                        Usuń rekordy z listy
+                    </div>
+                </a>
             </div>
             <h2 class="sub-header"></h2>
 
@@ -56,17 +59,18 @@
                         <td>
                             <div class="btn-group" role="group">
                                 <button type="button" class="btn btn-primary btn-sm"
-                                        th:class="${bill.statusColour == null}?
+                                        th:class="${bill.status.statusColour == null}?
                                         'btn btn-default custom btn-sm' :
-                                        'btn btn-sm custom btn-' + ${bill.statusColour}"
-                                        th:text="${bill.status}"></button>
+                                        'btn btn-sm custom btn-' + ${bill.status.statusColour}"
+                                        th:text="${bill.status.name}"></button>
+
                                 <button type="button" class="btn btn-primary btn-sm"
-                                        th:class="${bill.statusColour == null}?
+                                        th:class="${bill.status.statusColour == null}?
                                         'btn btn-default btn-sm' :
-                                        'btn btn-sm btn-' + ${bill.statusColour}">
-                                        <span th:class="${bill.categoryIcon == null}?
+                                        'btn btn-sm btn-' + ${bill.status.statusColour}">
+                                        <span th:class="${bill.category.icon == null}?
                                         'glyphicon glyphicon-euro' :
-                                        'glyphicon ' + ${bill.categoryIcon}"
+                                        'glyphicon ' + ${bill.category.icon}"
                                               class="glyphicon glyphicon-edit" aria-hidden="true">
                                         </span>
                                 </button>
@@ -78,7 +82,7 @@
                         </td>
                         <td>
                             <button type="button" class="btn btn-default-noborder btn-block btn-sm"
-                                    th:text="${bill.price}"></button>
+                                    th:text="${#numbers.formatDecimal(bill.price, 0, 'WHITESPACE', 2, 'COMMA')} + ' zł'"></button>
                         </td>
                         <td>
                             <button type="button" class="btn btn-default-noborder btn-block btn-sm"

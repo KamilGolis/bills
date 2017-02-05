@@ -3,11 +3,18 @@ package pl.bills.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
-import pl.bills.forms.RecordForm;
+import pl.bills.entities.BillsEntity;
 import pl.bills.services.BillsService;
+import pl.bills.services.CategoryService;
 import pl.bills.services.StatusService;
+
+import javax.validation.Valid;
 
 /**
  * Created by trot on 19.01.17.
@@ -22,13 +29,17 @@ public class BillsController {
     @Autowired
     StatusService statusService;
 
+    @Autowired
+    CategoryService categoryService;
+
     @RequestMapping(value = "/bills", method = RequestMethod.GET)
     public ModelAndView bills(Model model) {
         model.addAttribute("activeMenu", "bills");
         ModelAndView mav = new ModelAndView("bills");
         mav.addObject("billsList", billsService.getBills());
-        mav.addObject("form", new RecordForm());
         mav.addObject("statusList", statusService.getAllStatuses());
+        mav.addObject("categoryList", categoryService.getAll());
+        mav.addObject("form", new BillsEntity());
         return mav;
     }
 
@@ -47,9 +58,18 @@ public class BillsController {
         return "bills";
     }
 
+    @RequestMapping(value = "/removeall")
+    public String trash() {
+        billsService.removeAllBills();
+        return "redirect:bills";
+    }
+
     @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public String add(@ModelAttribute RecordForm form) {
-        billsService.addBillFromForm(form);
+    public String add(@Valid @ModelAttribute BillsEntity billsEntity, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "error";
+        }
+        billsService.addBill(billsEntity);
         return "redirect:bills";
     }
 

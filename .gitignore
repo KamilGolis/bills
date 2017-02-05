@@ -1,6 +1,10 @@
 target/
 !.mvn/wrapper/maven-wrapper.jar
 
+/src/main/resources/static/bower_components
+/Notes
+/bills.sqlite
+
 ### STS ###
 .apt_generated
 .classpath
@@ -22,3 +26,4 @@ nbbuild/
 dist/
 nbdist/
 .nb-gradle/
+
