@@ -30,26 +30,32 @@ public class CountingServices {
                 .stream()
                 .map(x -> (x.getPrice() == null ? BigDecimal.ZERO : x.getPrice()))
                 .reduce((x, y) -> x.add(y))
-                //.map(b -> convertPrice(b))
-                .get();
+                .orElse(BigDecimal.ZERO);
     }
 
     public BigDecimal biggestBillPrice() {
-        BillsEntity be = billsRepository.findAllByCategoryName(CategoryEnum.MAIN.get()).stream()
-                .max(Comparator.comparing(i -> (i.getPrice() == null ? BigDecimal.ZERO : i.getPrice())))
-                .get();
-        return be.getPrice();
+        if (billsRepository.findAllByCategoryName(CategoryEnum.MAIN.get()).isEmpty()) {
+            return BigDecimal.ZERO;
+        } else {
+            return billsRepository.findAllByCategoryName(CategoryEnum.MAIN.get()).stream()
+                    .max(Comparator.comparing(BillsEntity::getPrice))
+                    .get()
+                    .getPrice();
+        }
     }
 
     public String mostFrequentBill() {
-        String counter = billsRepository.findAllByCategoryName(CategoryEnum.MAIN.get())
-                .stream()
-                .collect(groupingBy(p -> p.getTitle(), counting()))
-                .entrySet()
-                .stream()
-                .max(Comparator.comparing(i -> i.getValue()))
-                .get().getKey();
-        return counter;
+        if (billsRepository.findAllByCategoryName(CategoryEnum.MAIN.get()).isEmpty()) {
+            return "Brak wyników";
+        } else {
+            return billsRepository.findAllByCategoryName(CategoryEnum.MAIN.get())
+                    .stream()
+                    .collect(groupingBy(p -> p.getTitle(), counting()))
+                    .entrySet()
+                    .stream()
+                    .max(Comparator.comparing(i -> i.getValue()))
+                    .get().getKey();
+        }
     }
 
 }

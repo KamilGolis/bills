@@ -60,8 +60,7 @@ public class BillsService {
     }
 
     public void removeAllBills() {
-        getBills().stream()
-                .forEach(b -> removeBill(b.getId()));
+        getBills().forEach(b -> removeBill(b.getId()));
     }
 
     public void undoBill(Integer id) {
