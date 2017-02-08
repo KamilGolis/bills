@@ -41,7 +41,7 @@
                 </div>
                 <div class="form-group">
                     <div class='input-group date' id='datetimepicker1'>
-                        <input type='text' class="form-control"/>
+                        <input type='text' class="form-control" th:field="*{date}"/>
                         <span class="input-group-addon">
                                     <span class="glyphicon glyphicon-calendar"></span>
                                     </span>
@@ -99,8 +99,8 @@
                     <textarea class="form-control" th:field="*{comment}" th:value="*{comment}" rows="5"/>
                 </div>
                 <div class="form-group">
-                    <div class='input-group date' id='datetimepicker2'>
-                        <input type='text' class="form-control"/>
+                    <div class='input-group date' id='datetimepicker1'>
+                        <input type='text' class="form-control" th:field="*{date}"/>
                         <span class="input-group-addon">
                                     <span class="glyphicon glyphicon-calendar"></span>
                                     </span>

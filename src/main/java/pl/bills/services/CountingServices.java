@@ -38,8 +38,9 @@ public class CountingServices {
             return BigDecimal.ZERO;
         } else {
             return billsRepository.findAllByCategoryName(CategoryEnum.MAIN.get()).stream()
-                    .max(Comparator.comparing(i -> (i.getPrice() == null ? BigDecimal.ZERO : i.getPrice())))
-                    .get().getPrice();
+                    .max(Comparator.comparing(BillsEntity::getPrice))
+                    .get()
+                    .getPrice();
         }
     }
 

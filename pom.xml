@@ -73,6 +73,7 @@
 			<version>3.1.1</version>
 		</dependency>
 		-->
+        <!--
         <dependency>
             <groupId>com.github.dandelion</groupId>
             <artifactId>datatables-thymeleaf</artifactId>
@@ -93,10 +94,17 @@
             <artifactId>datatables-spring3</artifactId>
             <version>1.1.0</version>
         </dependency>
+        -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-devtools</artifactId>
             <optional>true</optional>
+        </dependency>
+
+        <dependency>
+            <groupId>org.thymeleaf.extras</groupId>
+            <artifactId>thymeleaf-extras-java8time</artifactId>
+            <version>2.1.0.RELEASE</version>
         </dependency>
 
         <dependency>
