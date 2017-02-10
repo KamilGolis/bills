@@ -12,6 +12,7 @@ import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.Comparator;
 import java.util.Locale;
+import java.util.Map;
 
 import static java.util.stream.Collectors.counting;
 import static java.util.stream.Collectors.groupingBy;
@@ -28,8 +29,8 @@ public class CountingServices {
     public BigDecimal totalBillsPrice() {
         return billsRepository.findAllByCategoryName(CategoryEnum.MAIN.get())
                 .stream()
-                .map(x -> (x.getPrice() == null ? BigDecimal.ZERO : x.getPrice()))
-                .reduce((x, y) -> x.add(y))
+                .map(BillsEntity::getPrice)
+                .reduce(BigDecimal::add)
                 .orElse(BigDecimal.ZERO);
     }
 
@@ -46,14 +47,14 @@ public class CountingServices {
 
     public String mostFrequentBill() {
         if (billsRepository.findAllByCategoryName(CategoryEnum.MAIN.get()).isEmpty()) {
-            return "Brak wyników";
+            return "";
         } else {
             return billsRepository.findAllByCategoryName(CategoryEnum.MAIN.get())
                     .stream()
-                    .collect(groupingBy(p -> p.getTitle(), counting()))
+                    .collect(groupingBy(BillsEntity::getTitle, counting()))
                     .entrySet()
                     .stream()
-                    .max(Comparator.comparing(i -> i.getValue()))
+                    .max(Comparator.comparing(Map.Entry::getValue))
                     .get().getKey();
         }
     }

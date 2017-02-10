@@ -82,17 +82,19 @@
                         </td>
                         <td>
                             <button type="button" class="btn btn-default-noborder btn-block btn-sm"
-                                    th:text="${#numbers.formatDecimal(bill.price, 0, 'WHITESPACE', 2, 'COMMA')} + ' zł'"></button>
+                                    th:text="${#numbers.formatDecimal(bill.price, 1, 'WHITESPACE', 2, 'COMMA')} + ' zł'"></button>
                         </td>
                         <td>
                             <button type="button" class="btn btn-default-noborder btn-block btn-sm"
                                     th:text="${bill.date == null} ?
                                     '-' :
-                                    ${#temporals.format(bill.date, 'dd.MM.yyyy')}"></button>
+                                    ${{bill.date}}"></button>
                         </td>
                         <td>
                             <button type="button" class="btn btn-default-noborder btn-block btn-sm"
-                                    th:text="MM"></button>
+                                    th:text="${bill.loanHolder == null} ?
+                                    '-' :
+                                    ${bill.loanHolder.name}"></button>
                         </td>
                         <td>
                             <button type="button" class="btn btn-default-noborder btn-block btn-sm"

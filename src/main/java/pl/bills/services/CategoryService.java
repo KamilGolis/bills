@@ -24,4 +24,8 @@ public class CategoryService {
     public CategoryEntity getDefaultCategory() {
         return categoryRepository.findByName(CategoryEnum.MAIN.get());
     }
+
+    public CategoryEntity getCategory(String categoryName) {
+        return categoryRepository.findByName(categoryName);
+    }
 }

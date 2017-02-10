@@ -24,7 +24,7 @@ public class StatusFormatter implements Formatter<StatusEntity> {
     }
 
     @Override
-    public String print(StatusEntity object, Locale locale) {
-        return null;
+    public String print(StatusEntity status, Locale locale) {
+        return status.getName();
     }
 }

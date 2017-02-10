@@ -13,6 +13,7 @@ import org.springframework.web.servlet.ModelAndView;
 import pl.bills.entities.BillsEntity;
 import pl.bills.services.BillsService;
 import pl.bills.services.CategoryService;
+import pl.bills.services.LoanHolderService;
 import pl.bills.services.StatusService;
 
 import javax.validation.Valid;
@@ -33,6 +34,9 @@ public class BillsController {
     @Autowired
     CategoryService categoryService;
 
+    @Autowired
+    LoanHolderService loanHolderService;
+
     @RequestMapping(value = "/bills", method = RequestMethod.GET)
     public ModelAndView bills(Model model) {
         model.addAttribute("activeMenu", "bills");
@@ -40,6 +44,7 @@ public class BillsController {
         mav.addObject("billsList", billsService.getBills());
         mav.addObject("statusList", statusService.getAllStatuses());
         mav.addObject("categoryList", categoryService.getAll());
+        mav.addObject("loanList", loanHolderService.getAllLoanHolders());
         mav.addObject("form", new BillsEntity());
         return mav;
     }
@@ -68,6 +73,8 @@ public class BillsController {
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     public String add(@Valid @ModelAttribute BillsEntity billsEntity, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
+            System.err.println("Binding error -> Bills / add");
+            bindingResult.getAllErrors().forEach(System.err::println);
             return "error";
         }
         billsService.addBill(billsEntity);

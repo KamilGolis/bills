@@ -1,6 +1,7 @@
 package pl.bills.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,6 +12,7 @@ import org.springframework.web.servlet.ModelAndView;
 import pl.bills.entities.BillsEntity;
 import pl.bills.services.BillsService;
 import pl.bills.services.CategoryService;
+import pl.bills.services.LoanHolderService;
 import pl.bills.services.StatusService;
 
 import javax.validation.Valid;
@@ -31,6 +33,9 @@ public class ModifyController {
     @Autowired
     CategoryService categoryService;
 
+    @Autowired
+    LoanHolderService loanHolderService;
+
     @RequestMapping(value = "/modify", method = RequestMethod.GET)
     public ModelAndView modifyForm(@RequestParam Integer id, Model model) {
         model.addAttribute("activeMenu", "bills");
@@ -38,14 +43,22 @@ public class ModifyController {
         mav.addObject("billsList", billsService.getBills());
         mav.addObject("statusList", statusService.getAllStatuses());
         mav.addObject("categoryList", categoryService.getAll());
+        mav.addObject("loanHoldersList", loanHolderService.getAllLoanHolders());
         mav.addObject("form", billsService.getOneBill(id));
         return mav;
+    }
+
+    @InitBinder
+    public void initBinder(WebDataBinder binder) {
+        binder.registerCustomEditor(String.class, new StringTrimmerEditor(false));
     }
 
     @RequestMapping(value = "/apply", method = RequestMethod.POST)
     public String modify(@Valid @ModelAttribute("form") BillsEntity billsEntity, @RequestParam Integer id,
                          BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
+            System.err.println("Binding error -> Modify / apply");
+            bindingResult.getAllErrors().forEach(System.err::println);
             return "error";
         }
         billsEntity.setId(id);
