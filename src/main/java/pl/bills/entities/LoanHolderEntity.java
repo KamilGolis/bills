@@ -1,5 +1,7 @@
 package pl.bills.entities;
 
+import org.hibernate.validator.constraints.NotEmpty;
+
 import javax.persistence.*;
 import javax.validation.Valid;
 import java.util.Set;
@@ -17,7 +19,8 @@ public class LoanHolderEntity {
     @Column(name = "loan_holder_id")
     private Integer loanHolderId;
 
-    @Column(length = 50)
+    @Column(unique = true, length = 50)
+    @NotEmpty
     private String name;
     @Column(length = 200)
     private String address;

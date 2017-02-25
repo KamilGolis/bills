@@ -20,16 +20,11 @@ public class CategoryFormatter implements Formatter<CategoryEntity> {
 
     @Override
     public CategoryEntity parse(String categoryName, Locale locale) throws ParseException {
-        Collection<CategoryEntity> categtyList = categoryService.getAll();
-        return categtyList.stream()
-                .filter(c -> c.getName().equals(categoryName))
-                .findAny()
-                .get();
-
+        return categoryService.getCategory(categoryName);
     }
 
     @Override
-    public String print(CategoryEntity object, Locale locale) {
-        return null;
+    public String print(CategoryEntity category, Locale locale) {
+        return category.getName();
     }
 }

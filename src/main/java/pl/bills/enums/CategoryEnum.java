@@ -10,8 +10,8 @@ package pl.bills.enums;
  * TRASH for deleted but not removed bills.
  */
 public enum CategoryEnum {
-    MAIN("main"),
-    TRASH("trash");
+    MAIN("Główna"),
+    TRASH("Kosz");
 
     private String category;
 
