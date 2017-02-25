@@ -8,16 +8,34 @@
 <div th:fragment="newrecord">
     <div class="row">
         <form class="form-horizontal" action="#" th:action="@{/add}" th:object="${form}" method="POST">
-            <div class="col-md-5 col-md-offset-1">
+            <div class="col-md-4 col-md-offset-1">
                 <div class="form-group">
                     <label>Nazwa</label>
-                    <input type="text" class="form-control" th:field="*{title}"
-                           placeholder="Rachunek za..."/>
+                    <input type="text" class="form-control" th:field="*{title}" th:required="required"
+                           placeholder="Rachunek za..." max="50"/>
                 </div>
                 <div class="form-group">
                     <label>Wybierz status rachunku:</label>
                     <select class="form-control" th:field="*{status}">
                         <option th:each="s : ${statusList}" th:value="${s.name}" th:text="${s.name}">
+                        </option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="sr-only">Kwota (w zł)</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control" th:field="*{price}" th:required="required" placeholder="Kwota"/>
+                        <div class="input-group-addon">zł</div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-md-4 col-md-offset-2">
+                <div class="form-group">
+                    <label>Aktywni wierzyciele:</label>
+                    <select class="form-control" th:field="*{loanHolder}">
+                        <option th:each="l : ${loanList}" th:value="${l.name}" th:text="${l.name}">
                         </option>
                     </select>
                 </div>
@@ -29,27 +47,19 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <label class="sr-only">Kwota (w zł)</label>
-                    <div class="input-group">
-                        <input type="text" class="form-control" th:field="*{price}" placeholder="Kwota"/>
-                        <div class="input-group-addon">zł</div>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label>Opis dodatkowy</label>
-                    <textarea class="form-control" th:field="*{comment}" rows="5"/>
-                </div>
-                <div class="form-group">
                     <div class='input-group date' id='datetimepicker1'>
-                        <input type='text' class="form-control" th:field="*{date}"/>
+                        <input type='text' class="form-control" th:field="*{{date}}"/>
                         <span class="input-group-addon">
                                     <span class="glyphicon glyphicon-calendar"></span>
                                     </span>
                     </div>
                 </div>
             </div>
-            <div class="col-md-5">
-                <label>Dane dodatkowe</label>
+            <div class="col-md-10 col-md-offset-1">
+                <div class="form-group">
+                    <label>Opis dodatkowy</label>
+                    <textarea class="form-control" th:field="*{comment}" rows="3"/>
+                </div>
             </div>
             <div class="col-md-6 col-md-offset-3">
                 <button type="submit" class="btn btn-success btn-block">Dodaj rekord</button>
@@ -62,11 +72,11 @@
     <div class="row">
         <form class="form-horizontal" action="#" th:action="@{/apply(id=${form.id})}"
               th:object="${form}" method="POST">
-            <div class="col-md-5 col-md-offset-1">
+            <div class="col-md-4 col-md-offset-1">
                 <div class="form-group">
                     <label>Nazwa</label>
-                    <input type="text" class="form-control" th:field="*{title}" th:value="*{title}"
-                           placeholder="Rachunek za..."/>
+                    <input type="text" class="form-control" th:field="*{title}" th:value="*{title}" th:required="required"
+                           placeholder="Rachunek za..." max="50"/>
                 </div>
                 <div class="form-group">
 
@@ -77,38 +87,49 @@
                         </option>
                     </select>
                 </div>
+
+                <div class="form-group">
+                    <label class="sr-only">Kwota (w zł)</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control" th:name="price"
+                               th:value="${#numbers.formatDecimal(form.price, 1, 'WHITESPACE', 2, 'COMMA')}" th:required="required"
+                               placeholder="Kwota"/>
+                        <div class="input-group-addon">zł</div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-md-4 col-md-offset-2">
+                <div class="form-group">
+                    <label>Aktywni wierzyciele:</label>
+                    <select class="form-control" th:field="*{loanHolder}">
+                        <option th:each="loan : ${loanHoldersList}" th:value="${loan.name}" th:text="${loan.name}"
+                                th:selected="${form.loanHolder.name == loan.name}? 'selected'">
+                        </option>
+                    </select>
+                </div>
                 <div class="form-group">
                     <label>Kategoria rachunku:</label>
-                    <select class="form-control" th:field="*{category}">
+                    <select class="form-control selectpicker" th:field="*{category}">
                         <option th:each="c : ${categoryList}" th:value="${c.name}" th:text="${c.name}"
                                 th:selected="${form.category.name == c.name}? 'selected'">
                         </option>
                     </select>
                 </div>
                 <div class="form-group">
-                    <label class="sr-only">Kwota (w zł)</label>
-                    <div class="input-group">
-                        <input type="text" class="form-control" th:name="price"
-                               th:value="${#numbers.formatDecimal(form.price, 0, 'WHITESPACE', 2, 'COMMA')}"
-                               placeholder="Kwota"/>
-                        <div class="input-group-addon">zł</div>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label>Opis dodatkowy</label>
-                    <textarea class="form-control" th:field="*{comment}" th:value="*{comment}" rows="5"/>
-                </div>
-                <div class="form-group">
                     <div class='input-group date' id='datetimepicker1'>
-                        <input type='text' class="form-control" th:field="*{date}"/>
+                        <input type='text' class="form-control" th:field="*{{date}}"/>
                         <span class="input-group-addon">
                                     <span class="glyphicon glyphicon-calendar"></span>
                                     </span>
                     </div>
                 </div>
             </div>
-            <div class="col-md-5">
-                <label>Dane dodatkowe</label>
+            <div class="col-md-10 col-md-offset-1">
+                <div class="form-group">
+                    <label>Opis dodatkowy</label>
+                    <textarea class="form-control" th:field="*{comment}" th:value="*{comment}" rows="3"/>
+                </div>
             </div>
             <div class="col-md-6 col-md-offset-3">
                 <button type="submit" class="btn btn-success btn-block">Zapisz zmiany</button>

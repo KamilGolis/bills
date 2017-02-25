@@ -2,6 +2,7 @@ package pl.bills.entities;
 
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.NumberFormat;
+import org.springframework.stereotype.Controller;
 
 import javax.persistence.*;
 import javax.validation.Valid;
@@ -44,6 +45,7 @@ public class BillsEntity {
 
     @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     @JoinColumn(name = "loan_holder_id")
+    @Valid
     private LoanHolderEntity loanHolder;
 
     public BillsEntity() {
