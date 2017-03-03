@@ -11,6 +11,7 @@ import pl.bills.repository.StatusRepository;
 
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -49,6 +50,7 @@ public class BillsService {
 
     public boolean removeBill(Integer id) {
         BillsEntity bill = billsRepository.findById(id);
+
         if (bill != null) {
             CategoryEntity category = categoryRepository.findByName(CategoryEnum.TRASH.get());
             if (category != null) {
@@ -56,7 +58,8 @@ public class BillsService {
                 billsRepository.save(bill);
             }
             return true;
-        } else return false;
+        }
+        else return false;
     }
 
     public void removeAllBills() {
@@ -64,15 +67,12 @@ public class BillsService {
     }
 
     public void undoBill(Integer id) {
-        BillsEntity bill = billsRepository.findById(id);
-        if (bill != null) {
-            // Set MAIN category for undo bill.
-            CategoryEntity category = categoryRepository.findByName(CategoryEnum.MAIN.get());
-            if (category != null) {
-                bill.setCategory(category);
+        Optional.ofNullable(billsRepository.findById(id)).ifPresent(bill ->
+        Optional.ofNullable(categoryRepository.findAllByName(CategoryEnum.MAIN.get())).ifPresent(category -> {
+                bill.setCategory((CategoryEntity) category);
                 billsRepository.save(bill);
-            }
-        }
+            })
+        );
     }
 
     public void deleteBill(Integer id) {

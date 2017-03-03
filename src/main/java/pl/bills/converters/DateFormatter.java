@@ -20,18 +20,15 @@ public class DateFormatter implements Formatter<Date> {
 
     @Override
     public Date parse(final String text, final Locale locale) throws ParseException {
-        final SimpleDateFormat dateFormat = createDateFormat(locale);
-        return dateFormat.parse(text);
+        return createDateFormat(locale).parse(text);
     }
 
     @Override
     public String print(final Date object, final Locale locale) {
-        final SimpleDateFormat dateFormat = createDateFormat(locale);
-        return dateFormat.format(object);
+        return createDateFormat(locale).format(object);
     }
 
     private SimpleDateFormat createDateFormat(final Locale locale) {
-//        final String format = this.messageSource.getMessage("date.format", null, locale);
         final SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
         dateFormat.setLenient(false);
         return dateFormat;

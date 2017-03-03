@@ -26,19 +26,16 @@ public class PriceFormatter implements Formatter<BigDecimal> {
         df.setParseBigDecimal(true);
         BigDecimal bd = BigDecimal.ZERO;
         try {
-            bd = (BigDecimal) df.parseObject(text);
+            return (BigDecimal) df.parseObject(text);
         } catch (ParseException e) {
             System.err.println("Price converter -> converting null to BigDecimal.ZERO.");
-            ;
-        } finally {
-            return bd == null ? BigDecimal.ZERO : bd;
         }
+        return bd == null ? BigDecimal.ZERO : bd;
+
     }
 
     @Override
     public String print(BigDecimal object, Locale locale) {
-//        Currency currency = Currency.getInstance("PL");
-        NumberFormat numberFormat = NumberFormat.getCurrencyInstance();
-        return numberFormat.format(object);
+        return NumberFormat.getCurrencyInstance().format(object);
     }
 }

@@ -22,10 +22,13 @@ public class LoanHolderEntity {
     @Column(unique = true, length = 50)
     @NotEmpty
     private String name;
+
     @Column(length = 200)
     private String address;
+
     @Column(length = 200)
     private String description;
+
     @Column(length = 26)
     @Valid
     private String bankAccountNumber;

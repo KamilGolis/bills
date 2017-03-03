@@ -1,0 +1,622 @@
+Index: initial.sql
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- initial.sql	(revision 9573e80d2df76156f0f47d99fd95010cea817110)
++++ initial.sql	(revision 9573e80d2df76156f0f47d99fd95010cea817110)
+@@ -0,0 +1,14 @@
++INSERT INTO bills (id, comment, price, title, category_id, loan_holder_id, status_id) VALUES (1, 'Kupno zmywarki', 2000, 'Zakupy', 1, 2, 4);
++INSERT INTO bills (id, comment, price, title, category_id, loan_holder_id, status_id) VALUES (2, 'Tankowanie samochodu', 400, 'Paliwo', 1, 2, 4);
++INSERT INTO bills (id, comment, price, title, category_id, loan_holder_id, status_id) VALUES (3, 'Czynsz - styczeń 2017', 450.43, 'Czynsz', 1, 1, 2);
++INSERT INTO bills (id, comment, price, title, category_id, loan_holder_id, status_id) VALUES (4, 'Energia elektryczna - styczeń 2017', 110.32, 'Paliwo', 1, 2, 1);
++INSERT INTO bills (id, comment, price, title, category_id, loan_holder_id, status_id) VALUES (5, 'Gaz - styczeń 2017', 23.55, 'Gaz', 1, 2, 1);
++INSERT INTO bills (id, comment, price, title, category_id, loan_holder_id, status_id) VALUES (6, 'Kredyt - styczeń 2017', 987.26, 'Kredyt hipoteczny', 1, 2, 2);
++INSERT INTO category (category_id, name) VALUES (1, 'main');
++INSERT INTO category (category_id, name) VALUES (2, 'trash');
++INSERT INTO loan_holders (loan_holder_id, address, bank_account_number, description, name) VALUES (1, 'ul. Felińskiego 8, 93-259 Łódź', '12111122223333444455556666', 'Administracja Aktus', 'Aktus');
++INSERT INTO loan_holders (loan_holder_id, address, bank_account_number, description, name) VALUES (2, '-', '12666655554444333322221111', '-', 'Puste');
++INSERT INTO status (status_id, name) VALUES (1, 'Zapłacone');
++INSERT INTO status (status_id, name) VALUES (2, 'Do zapłaty');
++INSERT INTO status (status_id, name) VALUES (3, 'Do wyjaśnienia');
++INSERT INTO status (status_id, name) VALUES (4, 'Inne');
+Index: pom.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- pom.xml	(revision 7a9fcff4a0cfaad2d181dc5576c2e7a50604609d)
++++ pom.xml	(revision 9573e80d2df76156f0f47d99fd95010cea817110)
+@@ -51,51 +51,12 @@
+             <artifactId>sqlite-jdbc</artifactId>
+             <version>3.15.1</version>
+         </dependency>
+-        <!-- https://mvnrepository.com/artifact/net.kemitix/sqlite-dialect -->
+         <dependency>
+             <groupId>net.kemitix</groupId>
+             <artifactId>sqlite-dialect</artifactId>
+             <version>0.1.0</version>
+         </dependency>
+-        <!-- https://mvnrepository.com/artifact/org.webjars/bootstrap -->
+-        <!--
+         <dependency>
+-            <groupId>org.webjars</groupId>
+-            <artifactId>bootstrap</artifactId>
+-            <version>3.3.7</version>
+-        </dependency>
+-        -->
+-        <!-- https://mvnrepository.com/artifact/org.webjars/jquery -->
+-        <!--
+-		<dependency>
+-			<groupId>org.webjars</groupId>
+-			<artifactId>jquery</artifactId>
+-			<version>3.1.1</version>
+-		</dependency>
+-		-->
+-        <!--
+-        <dependency>
+-            <groupId>com.github.dandelion</groupId>
+-            <artifactId>datatables-thymeleaf</artifactId>
+-            <version>1.1.0</version>
+-        </dependency>
+-        <dependency>
+-            <groupId>com.github.dandelion</groupId>
+-            <artifactId>dandelion-thymeleaf</artifactId>
+-            <version>1.1.1</version>
+-        </dependency>
+-        <dependency>
+-            <groupId>com.github.dandelion</groupId>
+-            <artifactId>dandelion-core</artifactId>
+-            <version>1.1.1</version>
+-        </dependency>
+-        <dependency>
+-            <groupId>com.github.dandelion</groupId>
+-            <artifactId>datatables-spring3</artifactId>
+-            <version>1.1.0</version>
+-        </dependency>
+-        -->
+-        <dependency>
+             <groupId>org.springframework.boot</groupId>
+             <artifactId>spring-boot-devtools</artifactId>
+             <optional>true</optional>
+@@ -122,9 +83,4 @@
+             </plugin>
+         </plugins>
+     </build>
+-
+-    <configuration>
+-        <addResources>true</addResources>
+-    </configuration>
+-
+-</project>
++</project>
+\ No newline at end of file
+Index: src/main/java/pl/bills/BillsApplication.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/main/java/pl/bills/BillsApplication.java	(revision 7a9fcff4a0cfaad2d181dc5576c2e7a50604609d)
++++ src/main/java/pl/bills/BillsApplication.java	(revision 9573e80d2df76156f0f47d99fd95010cea817110)
+@@ -15,34 +15,5 @@
+ 
+     public static void main(String[] args) {
+         SpringApplication.run(BillsApplication.class, args);
+-
+-//        ApplicationContext ctx = SpringApplication.run(BillsApplication.class, args);
+-//        BillService billsService = ctx.getBean("billService", BillService.class);
+-//
+-//        String argument = "Zakupy";
+-//        System.out.println("Query : title="+argument);
+-//        billsService.getBillsByTitle(argument).stream().forEach(System.out::println);
+-//        argument = "Do zapłaty";
+-//        System.out.println("Query : status="+argument);
+-//        billsService.getBillsByStatus(argument).stream().forEach(System.out::println);
+     }
+ }
+-
+-/*
+-
+-INSERT INTO bills (id, comment, price, title, category_id, loan_holder_id, status_id) VALUES (1, 'Kupno zmywarki', 2000, 'Zakupy', 1, 2, 4);
+-INSERT INTO bills (id, comment, price, title, category_id, loan_holder_id, status_id) VALUES (2, 'Tankowanie samochodu', 400, 'Paliwo', 1, 2, 4);
+-INSERT INTO bills (id, comment, price, title, category_id, loan_holder_id, status_id) VALUES (3, 'Czynsz - styczeń 2017', 450.43, 'Czynsz', 1, 1, 2);
+-INSERT INTO bills (id, comment, price, title, category_id, loan_holder_id, status_id) VALUES (4, 'Energia elektryczna - styczeń 2017', 110.32, 'Paliwo', 1, 2, 1);
+-INSERT INTO bills (id, comment, price, title, category_id, loan_holder_id, status_id) VALUES (5, 'Gaz - styczeń 2017', 23.55, 'Gaz', 1, 2, 1);
+-INSERT INTO bills (id, comment, price, title, category_id, loan_holder_id, status_id) VALUES (6, 'Kredyt - styczeń 2017', 987.26, 'Kredyt hipoteczny', 1, 2, 2);
+-INSERT INTO category (category_id, name) VALUES (1, 'main');
+-INSERT INTO category (category_id, name) VALUES (2, 'trash');
+-INSERT INTO loan_holders (loan_holder_id, address, bank_account_number, description, name) VALUES (1, 'ul. Felińskiego 8, 93-259 Łódź', '12111122223333444455556666', 'Administracja Aktus', 'Aktus');
+-INSERT INTO loan_holders (loan_holder_id, address, bank_account_number, description, name) VALUES (2, '-', '12666655554444333322221111', '-', 'Puste');
+-INSERT INTO status (status_id, name) VALUES (1, 'Zapłacone');
+-INSERT INTO status (status_id, name) VALUES (2, 'Do zapłaty');
+-INSERT INTO status (status_id, name) VALUES (3, 'Do wyjaśnienia');
+-INSERT INTO status (status_id, name) VALUES (4, 'Inne');
+-
+- */
+\ No newline at end of file
+Index: src/main/java/pl/bills/config/AppConfig.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/main/java/pl/bills/config/AppConfig.java	(revision 7a9fcff4a0cfaad2d181dc5576c2e7a50604609d)
++++ src/main/java/pl/bills/config/AppConfig.java	(revision 9573e80d2df76156f0f47d99fd95010cea817110)
+@@ -3,26 +3,29 @@
+ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+ import org.springframework.context.annotation.ComponentScan;
+ import org.springframework.context.annotation.Configuration;
++import org.springframework.format.Formatter;
+ import org.springframework.format.FormatterRegistry;
+ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+ import pl.bills.converters.*;
+ 
+-/**
+- * Created by trot on 03.02.17.
+- */
++import java.util.Arrays;
++
++
+ @Configuration
+ @EnableAutoConfiguration
+ @ComponentScan
+ public class AppConfig extends WebMvcConfigurerAdapter {
+ 
++    private final Formatter[] formatters = {
++            new PriceFormatter(),
++            new DateFormatter(),
++            new StatusFormatter(),
++            new CategoryFormatter(),
++            new LoanHolderFormatter()
++    };
++
+     @Override
+     public void addFormatters(FormatterRegistry registry) {
+-//        registry.addConverter(new PriceStringToDecimalConverter());
+-
+-        registry.addFormatter(new PriceFormatter());
+-        registry.addFormatter(new DateFormatter());
+-        registry.addFormatter(new StatusFormatter());
+-        registry.addFormatter(new CategoryFormatter());
+-        registry.addFormatter(new LoanHolderFormatter());
++        Arrays.stream(formatters).forEach(registry::addFormatter);
+     }
+ }
+Index: src/main/java/pl/bills/controllers/BillsController.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/main/java/pl/bills/controllers/BillsController.java	(revision 7a9fcff4a0cfaad2d181dc5576c2e7a50604609d)
++++ src/main/java/pl/bills/controllers/BillsController.java	(revision 9573e80d2df76156f0f47d99fd95010cea817110)
+@@ -18,9 +18,6 @@
+ 
+ import javax.validation.Valid;
+ 
+-/**
+- * Created by trot on 19.01.17.
+- */
+ 
+ @Controller
+ public class BillsController {
+@@ -58,10 +55,7 @@
+ 
+     @RequestMapping(value = "/remove")
+     public String trash(@RequestParam Integer id) {
+-        if (billsService.removeBill(id)) {
+-            return "redirect:bills";
+-        }
+-        return "bills";
++        return billsService.removeBill(id)? "redirect:bills": "bills";
+     }
+ 
+     @RequestMapping(value = "/removeall")
+Index: src/main/java/pl/bills/controllers/DeletedBillsController.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/main/java/pl/bills/controllers/DeletedBillsController.java	(revision 7a9fcff4a0cfaad2d181dc5576c2e7a50604609d)
++++ src/main/java/pl/bills/controllers/DeletedBillsController.java	(revision 9573e80d2df76156f0f47d99fd95010cea817110)
+@@ -8,9 +8,6 @@
+ import org.springframework.web.servlet.ModelAndView;
+ import pl.bills.services.BillsService;
+ 
+-/**
+- * Created by trot on 23.01.17.
+- */
+ 
+ @Controller
+ public class DeletedBillsController {
+Index: src/main/java/pl/bills/controllers/ModifyController.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/main/java/pl/bills/controllers/ModifyController.java	(revision 7a9fcff4a0cfaad2d181dc5576c2e7a50604609d)
++++ src/main/java/pl/bills/controllers/ModifyController.java	(revision 9573e80d2df76156f0f47d99fd95010cea817110)
+@@ -17,9 +17,6 @@
+ 
+ import javax.validation.Valid;
+ 
+-/**
+- * Created by trot on 19.01.17.
+- */
+ 
+ @Controller
+ public class ModifyController {
+Index: src/main/java/pl/bills/converters/DateFormatter.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/main/java/pl/bills/converters/DateFormatter.java	(revision 7a9fcff4a0cfaad2d181dc5576c2e7a50604609d)
++++ src/main/java/pl/bills/converters/DateFormatter.java	(revision 9573e80d2df76156f0f47d99fd95010cea817110)
+@@ -8,9 +8,6 @@
+ import java.util.Date;
+ import java.util.Locale;
+ 
+-/**
+- * Created by trot on 10.02.17.
+- */
+ @Component
+ public class DateFormatter implements Formatter<Date> {
+ 
+@@ -20,18 +17,15 @@
+ 
+     @Override
+     public Date parse(final String text, final Locale locale) throws ParseException {
+-        final SimpleDateFormat dateFormat = createDateFormat(locale);
+-        return dateFormat.parse(text);
++        return createDateFormat(locale).parse(text);
+     }
+ 
+     @Override
+     public String print(final Date object, final Locale locale) {
+-        final SimpleDateFormat dateFormat = createDateFormat(locale);
+-        return dateFormat.format(object);
++        return createDateFormat(locale).format(object);
+     }
+ 
+     private SimpleDateFormat createDateFormat(final Locale locale) {
+-//        final String format = this.messageSource.getMessage("date.format", null, locale);
+         final SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
+         dateFormat.setLenient(false);
+         return dateFormat;
+Index: src/main/java/pl/bills/converters/PriceFormatter.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/main/java/pl/bills/converters/PriceFormatter.java	(revision 7a9fcff4a0cfaad2d181dc5576c2e7a50604609d)
++++ src/main/java/pl/bills/converters/PriceFormatter.java	(revision 9573e80d2df76156f0f47d99fd95010cea817110)
+@@ -9,9 +9,7 @@
+ import java.text.ParseException;
+ import java.util.Locale;
+ 
+-/**
+- * Created by trot on 10.02.17.
+- */
++
+ @Component
+ public class PriceFormatter implements Formatter<BigDecimal> {
+ 
+@@ -25,20 +23,19 @@
+         DecimalFormat df = (DecimalFormat) NumberFormat.getNumberInstance();
+         df.setParseBigDecimal(true);
+         BigDecimal bd = BigDecimal.ZERO;
++
+         try {
+-            bd = (BigDecimal) df.parseObject(text);
+-        } catch (ParseException e) {
++            return (BigDecimal) df.parseObject(text);
++        }
++        catch (ParseException e) {
+             System.err.println("Price converter -> converting null to BigDecimal.ZERO.");
+-            ;
+-        } finally {
++        }
++
+-            return bd == null ? BigDecimal.ZERO : bd;
+-        }
++        return bd == null ? BigDecimal.ZERO : bd;
++    }
+-    }
+ 
+     @Override
+     public String print(BigDecimal object, Locale locale) {
+-//        Currency currency = Currency.getInstance("PL");
+-        NumberFormat numberFormat = NumberFormat.getCurrencyInstance();
+-        return numberFormat.format(object);
++        return NumberFormat.getCurrencyInstance().format(object);
+     }
+ }
+Index: src/main/java/pl/bills/entities/LoanHolderEntity.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/main/java/pl/bills/entities/LoanHolderEntity.java	(revision 7a9fcff4a0cfaad2d181dc5576c2e7a50604609d)
++++ src/main/java/pl/bills/entities/LoanHolderEntity.java	(revision 9573e80d2df76156f0f47d99fd95010cea817110)
+@@ -6,9 +6,6 @@
+ import javax.validation.Valid;
+ import java.util.Set;
+ 
+-/**
+- * Created by trot on 09.01.17.
+- */
+ 
+ @Entity
+ @Table(name = "loan_holders")
+@@ -22,10 +19,13 @@
+     @Column(unique = true, length = 50)
+     @NotEmpty
+     private String name;
++
+     @Column(length = 200)
+     private String address;
++
+     @Column(length = 200)
+     private String description;
++
+     @Column(length = 26)
+     @Valid
+     private String bankAccountNumber;
+Index: src/main/java/pl/bills/enums/CategoryEnum.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/main/java/pl/bills/enums/CategoryEnum.java	(revision 7a9fcff4a0cfaad2d181dc5576c2e7a50604609d)
++++ src/main/java/pl/bills/enums/CategoryEnum.java	(revision 9573e80d2df76156f0f47d99fd95010cea817110)
+@@ -1,8 +1,5 @@
+ package pl.bills.enums;
+ 
+-/**
+- * Created by trot on 23.01.17.
+- */
+ 
+ /**
+  * Required categories.
+Index: src/main/java/pl/bills/repository/BillsRepository.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/main/java/pl/bills/repository/BillsRepository.java	(revision 7a9fcff4a0cfaad2d181dc5576c2e7a50604609d)
++++ src/main/java/pl/bills/repository/BillsRepository.java	(revision 9573e80d2df76156f0f47d99fd95010cea817110)
+@@ -6,10 +6,6 @@
+ 
+ import java.util.Collection;
+ 
+-/**
+- * Created by trot on 08.01.17.
+- */
+-
+ @Repository
+ public interface BillsRepository extends JpaRepository<BillsEntity, Integer> {
+ 
+Index: src/main/java/pl/bills/services/BillsService.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/main/java/pl/bills/services/BillsService.java	(revision 7a9fcff4a0cfaad2d181dc5576c2e7a50604609d)
++++ src/main/java/pl/bills/services/BillsService.java	(revision 9573e80d2df76156f0f47d99fd95010cea817110)
+@@ -11,6 +11,7 @@
+ 
+ import java.util.Collection;
+ import java.util.Comparator;
++import java.util.Optional;
+ import java.util.stream.Collectors;
+ 
+ /**
+@@ -49,6 +50,7 @@
+ 
+     public boolean removeBill(Integer id) {
+         BillsEntity bill = billsRepository.findById(id);
++
+         if (bill != null) {
+             CategoryEntity category = categoryRepository.findByName(CategoryEnum.TRASH.get());
+             if (category != null) {
+@@ -56,23 +58,21 @@
+                 billsRepository.save(bill);
+             }
+             return true;
+-        } else return false;
+-    }
++        }
++        else return false;
++    }
+ 
+     public void removeAllBills() {
+         getBills().forEach(b -> removeBill(b.getId()));
+     }
+ 
+     public void undoBill(Integer id) {
+-        BillsEntity bill = billsRepository.findById(id);
+-        if (bill != null) {
+-            // Set MAIN category for undo bill.
+-            CategoryEntity category = categoryRepository.findByName(CategoryEnum.MAIN.get());
+-            if (category != null) {
++        Optional.ofNullable(billsRepository.findById(id)).ifPresent(bill ->
++                Optional.ofNullable(categoryRepository.findByName(CategoryEnum.MAIN.get())).ifPresent(category -> {
+-                bill.setCategory(category);
+-                billsRepository.save(bill);
++                    bill.setCategory(category);
++                    billsRepository.save(bill);
+-            }
+-        }
++                })
++        );
+     }
+ 
+     public void deleteBill(Integer id) {
+Index: src/main/java/pl/bills/services/CategoryService.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/main/java/pl/bills/services/CategoryService.java	(revision 7a9fcff4a0cfaad2d181dc5576c2e7a50604609d)
++++ src/main/java/pl/bills/services/CategoryService.java	(revision 9573e80d2df76156f0f47d99fd95010cea817110)
+@@ -8,9 +8,7 @@
+ 
+ import java.util.Collection;
+ 
+-/**
+- * Created by trot on 04.02.17.
+- */
++
+ @Service
+ public class CategoryService {
+ 
+Index: src/main/java/pl/bills/services/CountingServices.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/main/java/pl/bills/services/CountingServices.java	(revision 7a9fcff4a0cfaad2d181dc5576c2e7a50604609d)
++++ src/main/java/pl/bills/services/CountingServices.java	(revision 9573e80d2df76156f0f47d99fd95010cea817110)
+@@ -17,9 +17,7 @@
+ import static java.util.stream.Collectors.counting;
+ import static java.util.stream.Collectors.groupingBy;
+ 
+-/**
+- * Created by trot on 28.01.17.
+- */
++
+ @Service
+ public class CountingServices {
+ 
+@@ -37,26 +35,26 @@
+     public BigDecimal biggestBillPrice() {
+         if (billsRepository.findAllByCategoryName(CategoryEnum.MAIN.get()).isEmpty()) {
+             return BigDecimal.ZERO;
+-        } else {
++        }
+-            return billsRepository.findAllByCategoryName(CategoryEnum.MAIN.get()).stream()
+-                    .max(Comparator.comparing(BillsEntity::getPrice))
+-                    .get()
+-                    .getPrice();
+-        }
++        return billsRepository.findAllByCategoryName(CategoryEnum.MAIN.get()).stream()
++                .max(Comparator.comparing(BillsEntity::getPrice))
++                .get()
++                .getPrice();
++    }
+-    }
+ 
+     public String mostFrequentBill() {
+         if (billsRepository.findAllByCategoryName(CategoryEnum.MAIN.get()).isEmpty()) {
+             return "";
+-        } else {
++        }
++
+-            return billsRepository.findAllByCategoryName(CategoryEnum.MAIN.get())
+-                    .stream()
+-                    .collect(groupingBy(BillsEntity::getTitle, counting()))
+-                    .entrySet()
+-                    .stream()
+-                    .max(Comparator.comparing(Map.Entry::getValue))
+-                    .get().getKey();
++        return billsRepository.findAllByCategoryName(CategoryEnum.MAIN.get())
++                .stream()
++                .collect(groupingBy(BillsEntity::getTitle, counting()))
++                .entrySet()
++                .stream()
++                .max(Comparator.comparing(Map.Entry::getValue))
++                .get().getKey();
+-        }
++
+     }
+ 
+ }
+Index: src/main/java/pl/bills/services/LoanHolderService.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/main/java/pl/bills/services/LoanHolderService.java	(revision 7a9fcff4a0cfaad2d181dc5576c2e7a50604609d)
++++ src/main/java/pl/bills/services/LoanHolderService.java	(revision 9573e80d2df76156f0f47d99fd95010cea817110)
+@@ -7,9 +7,7 @@
+ 
+ import java.util.Collection;
+ 
+-/**
+- * Created by trot on 09.02.17.
+- */
++
+ @Service
+ public class LoanHolderService {
+ 
+Index: src/main/java/pl/bills/services/StatusService.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/main/java/pl/bills/services/StatusService.java	(revision 7a9fcff4a0cfaad2d181dc5576c2e7a50604609d)
++++ src/main/java/pl/bills/services/StatusService.java	(revision 9573e80d2df76156f0f47d99fd95010cea817110)
+@@ -7,9 +7,7 @@
+ 
+ import java.util.Collection;
+ 
+-/**
+- * Created by trot on 22.01.17.
+- */
++
+ @Service
+ public class StatusService {
+ 
+Index: src/main/java/pl/bills/controllers/ErrorController.java
+===================================================================
+--- src/main/java/pl/bills/controllers/ErrorController.java	(revision 7a9fcff4a0cfaad2d181dc5576c2e7a50604609d)
++++ src/main/java/pl/bills/controllers/ErrorController.java	(revision 7a9fcff4a0cfaad2d181dc5576c2e7a50604609d)
+@@ -1,17 +0,0 @@
+-package pl.bills.controllers;
+-
+-import org.springframework.stereotype.Controller;
+-import org.springframework.web.bind.annotation.RequestMapping;
+-
+-/**
+- * Created by trot on 22.01.17.
+- */
+-//
+-//@Controller
+-//@RequestMapping(value = "/error")
+-//public class ErrorController {
+-//
+-//    public String  error404() {
+-//        return "error";
+-//    }
+-//}
+Index: src/main/java/pl/bills/converters/PriceStringToDecimalConverter.java
+===================================================================
+--- src/main/java/pl/bills/converters/PriceStringToDecimalConverter.java	(revision 7a9fcff4a0cfaad2d181dc5576c2e7a50604609d)
++++ src/main/java/pl/bills/converters/PriceStringToDecimalConverter.java	(revision 7a9fcff4a0cfaad2d181dc5576c2e7a50604609d)
+@@ -1,27 +0,0 @@
+-//package pl.bills.converters;
+-//
+-//import org.springframework.core.convert.converter.Converter;
+-//
+-//import java.math.BigDecimal;
+-//import java.text.DecimalFormat;
+-//import java.text.NumberFormat;
+-//import java.text.ParseException;
+-//
+-///**
+-// * Created by trot on 03.02.17.
+-// */
+-//public class PriceStringToDecimalConverter implements Converter<String, BigDecimal> {
+-//
+-//    @Override
+-//    public BigDecimal convert(String source) {
+-//        DecimalFormat df = (DecimalFormat) NumberFormat.getNumberInstance();
+-//        df.setParseBigDecimal(true);
+-//        BigDecimal bd = null;
+-//        try {
+-//            bd = (BigDecimal) df.parseObject(source);
+-//        } catch (ParseException e) {
+-//            e.printStackTrace();
+-//        }
+-//        return bd;
+-//    }
+-//}

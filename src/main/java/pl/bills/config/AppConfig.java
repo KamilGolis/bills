@@ -3,9 +3,12 @@ package pl.bills.config;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.format.Formatter;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import pl.bills.converters.*;
+
+import java.util.Arrays;
 
 /**
  * Created by trot on 03.02.17.
@@ -15,14 +18,16 @@ import pl.bills.converters.*;
 @ComponentScan
 public class AppConfig extends WebMvcConfigurerAdapter {
 
+    private final Formatter[] formatters = {
+            new PriceFormatter(),
+            new DateFormatter(),
+            new StatusFormatter(),
+            new CategoryFormatter(),
+            new LoanHolderFormatter()
+    };
+
     @Override
     public void addFormatters(FormatterRegistry registry) {
-//        registry.addConverter(new PriceStringToDecimalConverter());
-
-        registry.addFormatter(new PriceFormatter());
-        registry.addFormatter(new DateFormatter());
-        registry.addFormatter(new StatusFormatter());
-        registry.addFormatter(new CategoryFormatter());
-        registry.addFormatter(new LoanHolderFormatter());
+        Arrays.stream(formatters).forEach(registry::addFormatter);
     }
 }
