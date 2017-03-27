@@ -1,24 +1,17 @@
 package pl.bills.entities;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.NumberFormat;
 
-import javax.persistence.*;
+import javax.persistence.Column;
 import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-/**
- * Created by trot on 08.01.17.
- */
-@Entity
-@Table(name = "bills")
-public class BillsEntity {
+public class BillDTO {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @NotBlank
     private Integer id;
 
     @Column(length = 200)
@@ -34,49 +27,14 @@ public class BillsEntity {
     @DateTimeFormat(pattern = "dd.MM.yyyy")
     private LocalDate date;
 
-    @JsonBackReference
-    @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_id")
     @Valid
     private CategoryEntity category;
 
-    @JsonBackReference
-    @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
-    @JoinColumn(name = "status_id")
     @Valid
     private StatusEntity status;
 
-    @JsonBackReference
-    @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
-    @JoinColumn(name = "loan_holder_id")
     @Valid
     private LoanHolderEntity loanHolder;
-
-    public BillsEntity() {
-    }
-
-    public BillsEntity(String title, CategoryEntity category, StatusEntity status, LoanHolderEntity loanHolder) {
-        this.title = title;
-        this.category = category;
-        this.status = status;
-        this.loanHolder = loanHolder;
-    }
-
-    public LocalDate getDate() {
-        return date;
-    }
-
-    public void setDate(LocalDate date) {
-        this.date = date;
-    }
-
-    public LoanHolderEntity getLoanHolder() {
-        return loanHolder;
-    }
-
-    public void setLoanHolder(LoanHolderEntity loanHolder) {
-        this.loanHolder = loanHolder;
-    }
 
     public Integer getId() {
         return id;
@@ -110,6 +68,14 @@ public class BillsEntity {
         this.title = title;
     }
 
+    public LocalDate getDate() {
+        return date;
+    }
+
+    public void setDate(LocalDate date) {
+        this.date = date;
+    }
+
     public CategoryEntity getCategory() {
         return category;
     }
@@ -117,7 +83,6 @@ public class BillsEntity {
     public void setCategory(CategoryEntity category) {
         this.category = category;
     }
-
 
     public StatusEntity getStatus() {
         return status;
@@ -127,8 +92,11 @@ public class BillsEntity {
         this.status = status;
     }
 
-    @Override
-    public String toString() {
-        return title + " - " + price;
+    public LoanHolderEntity getLoanHolder() {
+        return loanHolder;
+    }
+
+    public void setLoanHolder(LoanHolderEntity loanHolder) {
+        this.loanHolder = loanHolder;
     }
 }

@@ -2,11 +2,13 @@ package pl.bills.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import pl.bills.entities.BillDTO;
 import pl.bills.entities.BillsEntity;
 import pl.bills.entities.CategoryEntity;
 import pl.bills.enums.CategoryEnum;
 import pl.bills.repository.BillsRepository;
 import pl.bills.repository.CategoryRepository;
+import pl.bills.repository.LoanHolderRepository;
 import pl.bills.repository.StatusRepository;
 
 import java.util.Collection;
@@ -30,14 +32,31 @@ public class BillsService {
     StatusRepository statusRepository;
 
     @Autowired
+    LoanHolderRepository loanHolderRepository;
+
+    @Autowired
     CountingServices countingServices;
 
-    public Collection<BillsEntity> getBills() {
+    public Collection<BillDTO> getBills() {
         return billsRepository.findAll()
                 .stream()
                 .filter(b -> !b.getCategory().getName().equals(CategoryEnum.TRASH.get()))
                 .sorted(Comparator.comparing(BillsEntity::getPrice))
+                .map(this::getBillDTO)
                 .collect(Collectors.toList());
+    }
+
+    private BillDTO getBillDTO(BillsEntity billsEntity) {
+        BillDTO billDTO = new BillDTO();
+        billDTO.setId(billsEntity.getId());
+        billDTO.setTitle(billsEntity.getTitle());
+        billDTO.setCategory(categoryRepository.findOne(billsEntity.getCategory().getCategoryId()));
+        billDTO.setComment(billsEntity.getComment());
+        billDTO.setDate(billsEntity.getDate());
+        billDTO.setLoanHolder(loanHolderRepository.findOne(billsEntity.getLoanHolder().getLoanHolderId()));
+        billDTO.setPrice(billsEntity.getPrice());
+        billDTO.setStatus(statusRepository.getOne(billsEntity.getStatus().getId()));
+        return billDTO;
     }
 
     public BillsEntity getOneBill(Integer id) {

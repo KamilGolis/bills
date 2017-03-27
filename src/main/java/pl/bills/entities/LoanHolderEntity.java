@@ -1,5 +1,7 @@
 package pl.bills.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
@@ -33,6 +35,7 @@ public class LoanHolderEntity {
     @Valid
     private String bankAccountNumber;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "loanHolder")
     private Set<BillsEntity> billsEntity;
 

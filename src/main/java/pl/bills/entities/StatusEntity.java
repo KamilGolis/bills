@@ -1,10 +1,10 @@
 package pl.bills.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 import java.util.Set;
 
 /**
@@ -24,6 +24,7 @@ public class StatusEntity {
     @Column(length = 50, unique = true)
     private String name;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "status", cascade = CascadeType.ALL)
     private Set<BillsEntity> billsEntity;
 

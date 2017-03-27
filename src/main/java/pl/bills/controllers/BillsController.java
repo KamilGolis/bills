@@ -1,80 +1,70 @@
 package pl.bills.controllers;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
+import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.bind.annotation.*;
+import pl.bills.entities.BillDTO;
 import pl.bills.entities.BillsEntity;
 import pl.bills.services.BillsService;
-import pl.bills.services.CategoryService;
-import pl.bills.services.LoanHolderService;
-import pl.bills.services.StatusService;
 
 import javax.validation.Valid;
+import java.util.Collection;
 
-/**
- * Created by trot on 19.01.17.
- */
-
-@Controller
+@RestController
 public class BillsController {
 
+    private final Logger log = LoggerFactory.getLogger(BillsController.class);
     @Autowired
     BillsService billsService;
 
-    @Autowired
-    StatusService statusService;
-
-    @Autowired
-    CategoryService categoryService;
-
-    @Autowired
-    LoanHolderService loanHolderService;
-
     @RequestMapping(value = "/bills", method = RequestMethod.GET)
-    public ModelAndView bills(Model model) {
-        model.addAttribute("activeMenu", "bills");
-        ModelAndView mav = new ModelAndView("bills");
-        mav.addObject("billsList", billsService.getBills());
-        mav.addObject("statusList", statusService.getAllStatuses());
-        mav.addObject("categoryList", categoryService.getAll());
-        mav.addObject("loanList", loanHolderService.getAllLoanHolders());
-        mav.addObject("form", new BillsEntity());
-        return mav;
+    @ResponseBody
+    public Collection<BillDTO> getAllBills() {
+        Collection<BillDTO> bills = billsService.getBills();
+        log.info("Getting bills. " + bills.size() + " items.");
+        return bills;
     }
 
-    @RequestMapping(value = "/search")
-    public ModelAndView search(ModelAndView mav, @RequestParam String search) {
-        mav = new ModelAndView("bills");
-        mav.addObject("billsList", billsService.search(search));
-        return mav;
+    @RequestMapping(value = "/bill/search/{searchVal}", method = RequestMethod.GET)
+    @ResponseBody
+    @ResponseStatus(HttpStatus.OK)
+    public Collection<BillsEntity> searchBills(@PathVariable String searchVal) {
+        log.info("Searching for " + searchVal);
+        Collection<BillsEntity> bills = billsService.search(searchVal);
+        log.info("Found " + bills.size() + " items.");
+        return bills;
     }
 
-    @RequestMapping(value = "/remove")
-    public String trash(@RequestParam Integer id) {
-        return billsService.removeBill(id) ? "redirect:bills" : "bills";
+    @RequestMapping(value = "/bill/remove/{id}", method = RequestMethod.PATCH)
+    @ResponseBody
+    @ResponseStatus(HttpStatus.OK)
+    public BillsEntity trash(@PathVariable Integer id) {
+        log.info("Removing bill id=" + id);
+        billsService.removeBill(id);
+        return billsService.getOneBill(id);
     }
 
-    @RequestMapping(value = "/removeall")
-    public String trash() {
+    @RequestMapping(value = "/bill/removeall", method = RequestMethod.GET)
+    @ResponseBody
+    @ResponseStatus(HttpStatus.OK)
+    public void trash() {
+        log.info("Removing all bills.");
         billsService.removeAllBills();
-        return "redirect:bills";
     }
 
-    @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public String add(@Valid @ModelAttribute BillsEntity billsEntity, BindingResult bindingResult) {
+    @RequestMapping(value = "/bill/add", method = RequestMethod.POST)
+    @ResponseBody
+    @ResponseStatus(HttpStatus.CREATED)
+    public BillsEntity add(@Valid @RequestBody BillsEntity billsEntity, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            System.err.println("Binding error -> Bills / add");
-            bindingResult.getAllErrors().forEach(System.err::println);
-            return "error";
+            log.error("Binding error -> Bills / add");
+            bindingResult.getAllErrors().forEach(l -> log.error(l.getDefaultMessage()));
         }
+        log.info("Creating bill " + billsEntity.toString());
         billsService.addBill(billsEntity);
-        return "redirect:bills";
+        return billsEntity;
     }
-
 }

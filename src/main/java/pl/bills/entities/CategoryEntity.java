@@ -1,5 +1,8 @@
 package pl.bills.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Set;
@@ -22,6 +25,7 @@ public class CategoryEntity {
 
     private String icon;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "category")
     private Set<BillsEntity> billsEntity;
 
