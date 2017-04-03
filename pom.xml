@@ -86,8 +86,10 @@
         </plugins>
     </build>
 
-    <!--<configuration>-->
-        <!--<addResources>true</addResources>-->
-    <!--</configuration>-->
+<!--
+    <configuration>
+        <addResources>true</addResources>
+    </configuration>
+-->
 
 </project>
