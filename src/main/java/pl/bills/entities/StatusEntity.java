@@ -1,7 +1,8 @@
 package pl.bills.entities;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
@@ -13,6 +14,9 @@ import java.util.Set;
 
 @Entity
 @Table(name = "status")
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id")
 public class StatusEntity {
 
     @Id
@@ -24,7 +28,7 @@ public class StatusEntity {
     @Column(length = 50, unique = true)
     private String name;
 
-    @JsonManagedReference
+    @JsonIgnore
     @OneToMany(mappedBy = "status", cascade = CascadeType.ALL)
     private Set<BillsEntity> billsEntity;
 

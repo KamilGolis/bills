@@ -1,7 +1,8 @@
 package pl.bills.entities;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -13,6 +14,9 @@ import java.util.Set;
 
 @Entity
 @Table(name = "category")
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "categoryId")
 public class CategoryEntity {
 
     @Id
@@ -25,7 +29,7 @@ public class CategoryEntity {
 
     private String icon;
 
-    @JsonManagedReference
+    @JsonIgnore
     @OneToMany(mappedBy = "category")
     private Set<BillsEntity> billsEntity;
 

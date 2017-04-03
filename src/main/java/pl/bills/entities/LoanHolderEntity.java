@@ -1,7 +1,8 @@
 package pl.bills.entities;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
@@ -14,6 +15,9 @@ import java.util.Set;
 
 @Entity
 @Table(name = "loan_holders")
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "loanHolderId")
 public class LoanHolderEntity {
 
     @Id
@@ -35,7 +39,7 @@ public class LoanHolderEntity {
     @Valid
     private String bankAccountNumber;
 
-    @JsonManagedReference
+    @JsonIgnore
     @OneToMany(mappedBy = "loanHolder")
     private Set<BillsEntity> billsEntity;
 

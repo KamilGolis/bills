@@ -3,12 +3,15 @@ package pl.bills.controllers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import pl.bills.entities.BillDTO;
+import org.springframework.web.util.UriComponentsBuilder;
 import pl.bills.entities.BillsEntity;
 import pl.bills.services.BillsService;
+import pl.bills.services.CustomErrorType;
 
 import javax.validation.Valid;
 import java.util.Collection;
@@ -22,10 +25,17 @@ public class BillsController {
 
     @RequestMapping(value = "/bills", method = RequestMethod.GET)
     @ResponseBody
-    public Collection<BillDTO> getAllBills() {
-        Collection<BillDTO> bills = billsService.getBills();
+    public Collection<BillsEntity> getAllBills() {
+        Collection<BillsEntity> bills = billsService.getBills();
         log.info("Getting bills. " + bills.size() + " items.");
         return bills;
+    }
+
+    @RequestMapping(value = "/bill/{id}", method = RequestMethod.GET)
+    @ResponseBody
+    public BillsEntity getBillById(@PathVariable Integer id) {
+        log.info("Getting bill id=" + id);
+        return billsService.getOneBill(id);
     }
 
     @RequestMapping(value = "/bill/search/{searchVal}", method = RequestMethod.GET)
@@ -55,16 +65,32 @@ public class BillsController {
         billsService.removeAllBills();
     }
 
+//    @RequestMapping(value = "/bill/add", method = RequestMethod.POST)
+//    @ResponseBody
+//    @ResponseStatus(HttpStatus.CREATED)
+//    public BillsEntity add(@Valid @RequestBody BillsEntity billsEntity, BindingResult bindingResult) {
+//        if (bindingResult.hasErrors()) {
+//            log.error("Binding error -> Bills / add");
+//            bindingResult.getAllErrors().forEach(l -> log.error(l.getDefaultMessage()));
+//        }
+//        log.info("Creating bill " + billsEntity.toString());
+//        billsService.addBill(billsEntity);
+//        return billsEntity;
+//    }
+
     @RequestMapping(value = "/bill/add", method = RequestMethod.POST)
-    @ResponseBody
-    @ResponseStatus(HttpStatus.CREATED)
-    public BillsEntity add(@Valid @RequestBody BillsEntity billsEntity, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            log.error("Binding error -> Bills / add");
-            bindingResult.getAllErrors().forEach(l -> log.error(l.getDefaultMessage()));
+    public ResponseEntity<?> createBill(@RequestBody BillsEntity billsEntity, UriComponentsBuilder ucBuilder) {
+        log.info("Creating Bill : {}", billsEntity);
+
+        if (billsService.isBillExist(billsEntity)) {
+            log.error("Unable to create. Bill with id {} already exist", billsEntity.getId());
+            return new ResponseEntity(new CustomErrorType("Unable to create. A User with name " +
+                    billsEntity.getId() + " already exist."),HttpStatus.CONFLICT);
         }
-        log.info("Creating bill " + billsEntity.toString());
         billsService.addBill(billsEntity);
-        return billsEntity;
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setLocation(ucBuilder.path("/bill/{id}").buildAndExpand(billsEntity.getId()).toUri());
+        return new ResponseEntity<String>(headers, HttpStatus.CREATED);
     }
 }
