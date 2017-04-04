@@ -2,7 +2,7 @@
 
 ## This is my first simple Spring Boot application. ##
 
-It allows to track expenses and bills. For this moment it has features as:
+This application is my main project that allows to track expenses and bills. For this moment it has features as:
 
 * Creating a bill
 * Modifying a bill
@@ -31,3 +31,13 @@ Sample application is hosted on [HEROKU](https://personalbills.herokuapp.com).
 * Import and export for reports
 * Better validation of form fields
 * Testing
+
+### Future plans : ###
+
+* Rest api with frontend in Angular
+* SPA
+* Internationalization
+* No DB reset after application awake
+* Responsive page for mobile phones
+* Alerts on e-mail for upcoming bills
+* Integration with calendar (google or outlook)
