@@ -14,9 +14,9 @@ import java.util.Set;
 
 @Entity
 @Table(name = "category")
-@JsonIdentityInfo(
-        generator = ObjectIdGenerators.PropertyGenerator.class,
-        property = "categoryId")
+//@JsonIdentityInfo(
+//        generator = ObjectIdGenerators.PropertyGenerator.class,
+//        property = "categoryId")
 public class CategoryEntity {
 
     @Id
@@ -29,9 +29,9 @@ public class CategoryEntity {
 
     private String icon;
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "category")
-    private Set<BillsEntity> billsEntity;
+//    @JsonIgnore
+//    @OneToMany(mappedBy = "category")
+//    private Set<BillsEntity> billsEntity;
 
     public CategoryEntity() {
     }
@@ -40,13 +40,13 @@ public class CategoryEntity {
         this.name = name;
     }
 
-    public Set<BillsEntity> getBillsEntity() {
-        return billsEntity;
-    }
+//    public Set<BillsEntity> getBillsEntity() {
+//        return billsEntity;
+//    }
 
-    public void setBillsEntity(Set<BillsEntity> billsEntity) {
-        this.billsEntity = billsEntity;
-    }
+//    public void setBillsEntity(Set<BillsEntity> billsEntity) {
+//        this.billsEntity = billsEntity;
+//    }
 
     public Integer getCategoryId() {
         return categoryId;

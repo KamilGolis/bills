@@ -2,6 +2,7 @@ package pl.bills.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.BindingResult;
 import pl.bills.entities.BillsEntity;
 import pl.bills.entities.CategoryEntity;
 import pl.bills.enums.CategoryEnum;
@@ -100,8 +101,21 @@ public class BillsService {
         billsRepository.save(billsEntity);
     }
 
-    public boolean isBillExist(BillsEntity billsEntity) {
-        return (billsRepository.findAll().stream()
-                .anyMatch(b -> b.equals(billsEntity)));
+    public BindingResult checkBill(BillsEntity billsEntity, BindingResult errors) {
+        if (statusRepository.findById(billsEntity.getStatus().getId()) == null) {
+            errors.reject("Status does not exist.");
+//            return errors;
+        }
+        if (categoryRepository.findByCategoryId(billsEntity.getCategory().getCategoryId()) == null) {
+            errors.reject("Category does not exist.");
+//            return errors;
+        }
+        if (loanHolderRepository.findOne(billsEntity.getLoanHolder().getLoanHolderId()) == null) {
+            errors.reject("LoanHolder does not exist.");
+//            return errors;
+        }
+//        return (billsRepository.findAll().stream()
+//                .anyMatch(b -> b.equals(billsEntity)));
+        return errors;
     }
 }

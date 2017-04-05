@@ -15,9 +15,9 @@ import java.util.Set;
 
 @Entity
 @Table(name = "loan_holders")
-@JsonIdentityInfo(
-        generator = ObjectIdGenerators.PropertyGenerator.class,
-        property = "loanHolderId")
+//@JsonIdentityInfo(
+//        generator = ObjectIdGenerators.PropertyGenerator.class,
+//        property = "loanHolderId")
 public class LoanHolderEntity {
 
     @Id
@@ -39,9 +39,9 @@ public class LoanHolderEntity {
     @Valid
     private String bankAccountNumber;
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "loanHolder")
-    private Set<BillsEntity> billsEntity;
+//    @JsonIgnore
+//    @OneToMany(mappedBy = "loanHolder")
+//    private Set<BillsEntity> billsEntity;
 
     public LoanHolderEntity() {
     }
@@ -98,11 +98,11 @@ public class LoanHolderEntity {
         this.bankAccountNumber = bankAccountNumber;
     }
 
-    public Set<BillsEntity> getBillsEntity() {
-        return billsEntity;
-    }
+//    public Set<BillsEntity> getBillsEntity() {
+//        return billsEntity;
+//    }
 
-    public void setBillsEntity(Set<BillsEntity> billsEntity) {
-        this.billsEntity = billsEntity;
-    }
+//    public void setBillsEntity(Set<BillsEntity> billsEntity) {
+//        this.billsEntity = billsEntity;
+//    }
 }

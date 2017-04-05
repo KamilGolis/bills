@@ -6,7 +6,7 @@ package pl.bills.enums;
 
 /**
  * Required categories.
- * MAIN for every bill if other categories are not avaible
+ * MAIN for every bill if other categories are not available
  * TRASH for deleted but not removed bills.
  */
 public enum CategoryEnum {
