@@ -30,4 +30,5 @@ public class AppConfig extends WebMvcConfigurerAdapter {
     public void addFormatters(FormatterRegistry registry) {
         Arrays.stream(formatters).forEach(registry::addFormatter);
     }
+
 }

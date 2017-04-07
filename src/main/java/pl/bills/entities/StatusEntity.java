@@ -14,9 +14,9 @@ import java.util.Set;
 
 @Entity
 @Table(name = "status")
-//@JsonIdentityInfo(
-//        generator = ObjectIdGenerators.PropertyGenerator.class,
-//        property = "id")
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id")
 public class StatusEntity {
 
     @Id
@@ -28,26 +28,28 @@ public class StatusEntity {
     @Column(length = 50, unique = true)
     private String name;
 
-//    @JsonIgnore
-//    @OneToMany(mappedBy = "status", cascade = CascadeType.ALL)
-//    private Set<BillsEntity> billsEntity;
+    @JsonIgnore
+    @OneToMany(mappedBy = "status", cascade = CascadeType.ALL)
+    private Set<BillsEntity> billsEntity;
 
     private String statusColour;
 
     public StatusEntity() {
     }
 
-    public StatusEntity(String name) {
+    public StatusEntity(String name, Set<BillsEntity> billsEntity, String statusColour) {
         this.name = name;
+        this.billsEntity = billsEntity;
+        this.statusColour = statusColour;
     }
 
-//    public Set<BillsEntity> getBillsEntity() {
-//        return billsEntity;
-//    }
+    public Set<BillsEntity> getBillsEntity() {
+        return billsEntity;
+    }
 
-//    public void setBillsEntity(Set<BillsEntity> billsEntity) {
-//        this.billsEntity = billsEntity;
-//    }
+    public void setBillsEntity(Set<BillsEntity> billsEntity) {
+        this.billsEntity = billsEntity;
+    }
 
     public Integer getId() {
         return id;

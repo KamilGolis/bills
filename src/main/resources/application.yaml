@@ -1,0 +1,33 @@
+# Application Info
+info:
+  name: bills
+  description: bills
+  version: 1.0
+
+server:
+  port: 8080
+  context-path: /
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/postgres
+    username: trot
+    password: trot
+    driver-class-name: org.postgresql.Driver
+    schema: bills
+
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQL94Dialect
+        default_schema: bills
+        hbm2ddl.auto: create-drop
+        hibernate.show_sql: true
+        hibernate.format_sql: true
+
+logging:
+  level:
+    matchingstore: 'INFO'

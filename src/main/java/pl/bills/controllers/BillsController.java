@@ -14,13 +14,19 @@ import pl.bills.services.CustomErrorType;
 import java.util.Collection;
 
 @RestController
+@RequestMapping(value = "/api")
 public class BillsController {
 
     private final Logger log = LoggerFactory.getLogger(BillsController.class);
-    @Autowired
-    BillsService billsService;
 
-    @RequestMapping(value = "/bills", method = RequestMethod.GET)
+    private BillsService billsService;
+
+    @Autowired
+    public BillsController(BillsService billsService) {
+        this.billsService = billsService;
+    }
+
+    @GetMapping(value = "/bills")
     public ResponseEntity<Collection<BillsEntity>> getAllBills() {
         Collection<BillsEntity> bills = billsService.getBills();
         if (bills.isEmpty() || bills == null) {
@@ -32,7 +38,7 @@ public class BillsController {
         }
     }
 
-    @RequestMapping(value = "/bill/{id}", method = RequestMethod.GET)
+    @GetMapping(value = "/bill/{id}")
     public ResponseEntity<BillsEntity> getBillById(@PathVariable Integer id) {
         log.info("Getting bill id=" + id);
         BillsEntity bill = billsService.getOneBill(id);
@@ -43,7 +49,7 @@ public class BillsController {
         return new ResponseEntity<>(bill, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/bill/search/{searchVal}", method = RequestMethod.GET)
+    @GetMapping(value = "/bill/search/{searchVal}")
     public ResponseEntity<Collection<BillsEntity>> searchBills(@PathVariable String searchVal) {
         log.info("Searching for " + searchVal);
         Collection<BillsEntity> bills = billsService.search(searchVal);
@@ -51,7 +57,7 @@ public class BillsController {
         return new ResponseEntity<>(bills, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/bill/remove/{id}", method = RequestMethod.PATCH)
+    @GetMapping(value = "/bill/remove/{id}")
     public ResponseEntity<BillsEntity> trash(@PathVariable Integer id) {
         log.info("Removing bill id=" + id);
         billsService.removeBill(id);
@@ -59,7 +65,7 @@ public class BillsController {
         return new ResponseEntity<>(bill, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/bill/removeall", method = RequestMethod.GET)
+    @GetMapping(value = "/bill/removeall")
     public ResponseEntity<Void> trash() {
         log.info("Removing all bills.");
         billsService.removeAllBills();
@@ -79,7 +85,7 @@ public class BillsController {
 //        return billsEntity;
 //    }
 
-    @RequestMapping(value = "/bill/add", method = RequestMethod.POST)
+    @PostMapping(value = "/bill/add")
     public ResponseEntity<BillsEntity> createBill(@RequestBody BillsEntity billsEntity, BindingResult errors) {
         log.info("Creating Bill : {}", billsEntity);
 

@@ -1,14 +1,11 @@
 package pl.bills.entities;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.NumberFormat;
 
 import javax.persistence.*;
-import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
@@ -35,30 +32,29 @@ public class BillsEntity {
     @Column(length = 50)
     private String title;
 
-    @Valid
     @DateTimeFormat(pattern = "dd.MM.yyyy")
     private LocalDate date;
 
-    @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
+    @ManyToOne //(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     @JoinColumn(name = "category_id")
-    @Valid
     private CategoryEntity category;
 
-    @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
+    @ManyToOne  //(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     @JoinColumn(name = "status_id")
-    @Valid
     private StatusEntity status;
 
-    @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
+    @ManyToOne //(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     @JoinColumn(name = "loan_holder_id")
-    @Valid
     private LoanHolderEntity loanHolder;
 
     public BillsEntity() {
     }
 
-    public BillsEntity(String title, CategoryEntity category, StatusEntity status, LoanHolderEntity loanHolder) {
+    public BillsEntity(String comment, BigDecimal price, String title, LocalDate date, CategoryEntity category, StatusEntity status, LoanHolderEntity loanHolder) {
+        this.comment = comment;
+        this.price = price;
         this.title = title;
+        this.date = date;
         this.category = category;
         this.status = status;
         this.loanHolder = loanHolder;
