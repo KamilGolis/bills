@@ -7,8 +7,10 @@ import pl.bills.enums.CategoryEnum;
 import pl.bills.repository.BillsRepository;
 
 import java.math.BigDecimal;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.Map;
+import java.util.Optional;
 
 import static java.util.stream.Collectors.counting;
 import static java.util.stream.Collectors.groupingBy;
@@ -19,39 +21,41 @@ import static java.util.stream.Collectors.groupingBy;
 @Service
 public class CountingServices {
 
+    private BillsRepository billsRepository;
+
     @Autowired
-    BillsRepository billsRepository;
+    public CountingServices(BillsRepository billsRepository) {
+        this.billsRepository = billsRepository;
+    }
 
     public BigDecimal totalBillsPrice() {
-        return billsRepository.findAllByCategoryName(CategoryEnum.MAIN.get())
-                .stream()
+        Optional<Collection<BillsEntity>> bills = billsRepository.findAllByCategoryName(CategoryEnum.MAIN.get());
+        return bills.map(billsEntities -> billsEntities.stream()
                 .map(BillsEntity::getPrice)
                 .reduce(BigDecimal::add)
+                .get())
                 .orElse(BigDecimal.ZERO);
     }
 
     public BigDecimal biggestBillPrice() {
-        if (billsRepository.findAllByCategoryName(CategoryEnum.MAIN.get()).isEmpty()) {
-            return BigDecimal.ZERO;
-        }
-        return billsRepository.findAllByCategoryName(CategoryEnum.MAIN.get()).stream()
+        Optional<Collection<BillsEntity>> bills = billsRepository.findAllByCategoryName(CategoryEnum.MAIN.get());
+        return bills.map(billsEntities -> billsEntities.stream()
                 .max(Comparator.comparing(BillsEntity::getPrice))
                 .get()
-                .getPrice();
+                .getPrice())
+                .orElse(BigDecimal.ZERO);
     }
 
     public String mostFrequentBill() {
-        if (billsRepository.findAllByCategoryName(CategoryEnum.MAIN.get()).isEmpty()) {
-            return "";
-        }
-        return billsRepository.findAllByCategoryName(CategoryEnum.MAIN.get())
+        Optional<Collection<BillsEntity>> bills = billsRepository.findAllByCategoryName(CategoryEnum.MAIN.get());
+        return bills.map(billsEntities -> billsEntities
                 .stream()
                 .collect(groupingBy(BillsEntity::getTitle, counting()))
                 .entrySet()
                 .stream()
                 .max(Comparator.comparing(Map.Entry::getValue))
-                .get().getKey();
-
+                .get().getKey())
+                .orElse("");
     }
 
 }

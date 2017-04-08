@@ -1,13 +1,11 @@
 package pl.bills.entities;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
-import javax.validation.Valid;
-import java.util.Set;
+import java.util.List;
 
 /**
  * Created by trot on 09.01.17.
@@ -17,7 +15,8 @@ import java.util.Set;
 @Table(name = "loan_holders")
 @JsonIdentityInfo(
         generator = ObjectIdGenerators.PropertyGenerator.class,
-        property = "loanHolderId")
+        property = "loanHolderId",
+        scope = LoanHolderEntity.class)
 public class LoanHolderEntity {
 
     @Id
@@ -38,14 +37,13 @@ public class LoanHolderEntity {
     @Column(length = 26)
     private String bankAccountNumber;
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "loanHolder")
-    private Set<BillsEntity> billsEntity;
+    @OneToMany(mappedBy = "loanHolder", fetch = FetchType.EAGER)
+    private List<BillsEntity> billsEntity;
 
     public LoanHolderEntity() {
     }
 
-    public LoanHolderEntity(String name, String address, String description, String bankAccountNumber, Set<BillsEntity> billsEntity) {
+    public LoanHolderEntity(String name, String address, String description, String bankAccountNumber, List<BillsEntity> billsEntity) {
         this.name = name;
         this.address = address;
         this.description = description;
@@ -98,11 +96,40 @@ public class LoanHolderEntity {
         this.bankAccountNumber = bankAccountNumber;
     }
 
-    public Set<BillsEntity> getBillsEntity() {
+    public List<BillsEntity> getBillsEntity() {
         return billsEntity;
     }
 
-    public void setBillsEntity(Set<BillsEntity> billsEntity) {
+    public void setBillsEntity(List<BillsEntity> billsEntity) {
         this.billsEntity = billsEntity;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        final LoanHolderEntity that = (LoanHolderEntity) o;
+
+        if (getLoanHolderId() != null ? !getLoanHolderId().equals(that.getLoanHolderId()) : that.getLoanHolderId() != null)
+            return false;
+        if (getName() != null ? !getName().equals(that.getName()) : that.getName() != null) return false;
+        if (getAddress() != null ? !getAddress().equals(that.getAddress()) : that.getAddress() != null) return false;
+        if (getDescription() != null ? !getDescription().equals(that.getDescription()) : that.getDescription() != null)
+            return false;
+        if (getBankAccountNumber() != null ? !getBankAccountNumber().equals(that.getBankAccountNumber()) : that.getBankAccountNumber() != null)
+            return false;
+        return getBillsEntity() != null ? getBillsEntity().equals(that.getBillsEntity()) : that.getBillsEntity() == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = getLoanHolderId() != null ? getLoanHolderId().hashCode() : 0;
+        result = 31 * result + (getName() != null ? getName().hashCode() : 0);
+        result = 31 * result + (getAddress() != null ? getAddress().hashCode() : 0);
+        result = 31 * result + (getDescription() != null ? getDescription().hashCode() : 0);
+        result = 31 * result + (getBankAccountNumber() != null ? getBankAccountNumber().hashCode() : 0);
+        result = 31 * result + (getBillsEntity() != null ? getBillsEntity().hashCode() : 0);
+        return result;
     }
 }

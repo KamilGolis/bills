@@ -2,14 +2,11 @@ package pl.bills.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.validation.BindingResult;
 import pl.bills.entities.BillsEntity;
 import pl.bills.entities.CategoryEntity;
 import pl.bills.enums.CategoryEnum;
 import pl.bills.repository.BillsRepository;
 import pl.bills.repository.CategoryRepository;
-import pl.bills.repository.LoanHolderRepository;
-import pl.bills.repository.StatusRepository;
 
 import java.util.Collection;
 import java.util.Comparator;
@@ -22,75 +19,68 @@ import java.util.stream.Collectors;
 @Service
 public class BillsService {
 
-    @Autowired
-    BillsRepository billsRepository;
+    private BillsRepository billsRepository;
+
+    private CategoryRepository categoryRepository;
 
     @Autowired
-    CategoryRepository categoryRepository;
+    public BillsService(BillsRepository billsRepository, CategoryRepository categoryRepository) {
+        this.billsRepository = billsRepository;
+        this.categoryRepository = categoryRepository;
+    }
 
-    @Autowired
-    StatusRepository statusRepository;
-
-    @Autowired
-    LoanHolderRepository loanHolderRepository;
-
-    @Autowired
-    CountingServices countingServices;
-
-    public Collection<BillsEntity> getBills() {
-        return billsRepository.findAll()
+    public Optional<Collection<BillsEntity>> getBills() {
+        return Optional.ofNullable(billsRepository.findAll()
                 .stream()
                 .filter(b -> !b.getCategory().getName().equals(CategoryEnum.TRASH.get()))
                 .sorted(Comparator.comparing(BillsEntity::getPrice))
-                .collect(Collectors.toList());
+                .collect(Collectors.toList()));
     }
 
-    public BillsEntity getOneBill(Integer id) {
+    public Optional<BillsEntity> getOneBill(Integer id) {
         return billsRepository.findById(id);
     }
 
-    public Collection<BillsEntity> getDeletedBills() {
+    public Optional<Collection<BillsEntity>> getDeletedBills() {
         return billsRepository.findAllByCategoryName(CategoryEnum.TRASH.get());
     }
 
-    public boolean removeBill(Integer id) {
-        BillsEntity bill = billsRepository.findById(id);
-
-        if (bill != null) {
+    public void removeBill(Integer id) {
+        Optional<BillsEntity> bill = billsRepository.findById(id);
+        if (bill.isPresent()) {
             CategoryEntity category = categoryRepository.findByName(CategoryEnum.TRASH.get());
             if (category != null) {
-                bill.setCategory(category);
-                billsRepository.save(bill);
+                BillsEntity foundBill = bill.get();
+                foundBill.setCategory(category);
+                billsRepository.save(foundBill);
             }
-            return true;
         }
-        else return false;
     }
 
     public void removeAllBills() {
-        getBills().forEach(b -> removeBill(b.getId()));
+        getBills().ifPresent(billsEntities -> billsEntities.forEach(bill -> removeBill(bill.getId())));
     }
 
     public void undoBill(Integer id) {
-        Optional.ofNullable(billsRepository.findById(id)).ifPresent(bill ->
-        Optional.ofNullable(categoryRepository.findAllByName(CategoryEnum.MAIN.get())).ifPresent(category -> {
-                bill.setCategory((CategoryEntity) category);
-                billsRepository.save(bill);
-            })
+        billsRepository.findById(id).ifPresent(bill ->
+                Optional.ofNullable(categoryRepository.findAllByName(CategoryEnum.MAIN.get())).ifPresent(category -> {
+                    bill.setCategory((CategoryEntity) category);
+                    billsRepository.save(bill);
+                })
         );
     }
 
     public void deleteBill(Integer id) {
-        if (billsRepository.findById(id) != null) {
+        if (billsRepository.findById(id).isPresent()) {
             billsRepository.delete(id);
         }
     }
 
-    public Collection<BillsEntity> search(String searchValue) {
-        Collection<BillsEntity> billsEntities = billsRepository.findAllByTitle(searchValue);
-        if (billsEntities.isEmpty()) {
+    public Optional<Collection<BillsEntity>> search(String searchValue) {
+        Optional<Collection<BillsEntity>> billsEntities = billsRepository.findAllByTitle(searchValue);
+        if (!billsEntities.isPresent()) {
             billsEntities = billsRepository.findAllByStatusName(searchValue);
-            if (billsEntities.isEmpty()) {
+            if (!billsEntities.isPresent()) {
                 billsEntities = billsRepository.findAllByLoanHolderName(searchValue);
             }
         }
@@ -99,23 +89,5 @@ public class BillsService {
 
     public void addBill(BillsEntity billsEntity) {
         billsRepository.save(billsEntity);
-    }
-
-    public BindingResult checkBill(BillsEntity billsEntity, BindingResult errors) {
-        if (statusRepository.findById(billsEntity.getStatus().getId()) == null) {
-            errors.reject("Status does not exist.");
-//            return errors;
-        }
-        if (categoryRepository.findByCategoryId(billsEntity.getCategory().getCategoryId()) == null) {
-            errors.reject("Category does not exist.");
-//            return errors;
-        }
-        if (loanHolderRepository.findOne(billsEntity.getLoanHolder().getLoanHolderId()) == null) {
-            errors.reject("LoanHolder does not exist.");
-//            return errors;
-        }
-//        return (billsRepository.findAll().stream()
-//                .anyMatch(b -> b.equals(billsEntity)));
-        return errors;
     }
 }

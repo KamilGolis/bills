@@ -4,14 +4,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import pl.bills.entities.BillsEntity;
 import pl.bills.services.BillsService;
-import pl.bills.services.CustomErrorType;
 
+import javax.validation.Valid;
 import java.util.Collection;
+import java.util.Optional;
 
 @RestController
 @RequestMapping(value = "/api")
@@ -28,79 +29,61 @@ public class BillsController {
 
     @GetMapping(value = "/bills")
     public ResponseEntity<Collection<BillsEntity>> getAllBills() {
-        Collection<BillsEntity> bills = billsService.getBills();
-        if (bills.isEmpty() || bills == null) {
-            log.info("Nothing found.");
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        } else {
-            log.info("Getting bills. " + bills.size() + " items.");
-            return new ResponseEntity<>(bills, HttpStatus.OK);
+        Optional<Collection<BillsEntity>> bills = billsService.getBills();
+        if (bills.isPresent()) {
+            log.info("Getting bills. " + bills.get().size() + " items.");
+            return new ResponseEntity<>(bills.get(), HttpStatus.OK);
         }
+        log.info("Nothing found.");
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
     @GetMapping(value = "/bill/{id}")
     public ResponseEntity<BillsEntity> getBillById(@PathVariable Integer id) {
         log.info("Getting bill id=" + id);
-        BillsEntity bill = billsService.getOneBill(id);
-        if (bill == null) {
-            log.info("Nothing found.");
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        Optional<BillsEntity> bill = billsService.getOneBill(id);
+        if (bill.isPresent()) {
+            return new ResponseEntity<>(bill.get(), HttpStatus.OK);
         }
-        return new ResponseEntity<>(bill, HttpStatus.OK);
+        log.info("Nothing found.");
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
     @GetMapping(value = "/bill/search/{searchVal}")
     public ResponseEntity<Collection<BillsEntity>> searchBills(@PathVariable String searchVal) {
         log.info("Searching for " + searchVal);
-        Collection<BillsEntity> bills = billsService.search(searchVal);
-        log.info("Found " + bills.size() + " items.");
-        return new ResponseEntity<>(bills, HttpStatus.OK);
+        Optional<Collection<BillsEntity>> bills = billsService.search(searchVal);
+        if (bills.isPresent()) {
+            log.info("Found " + bills.get().size() + " items.");
+            return new ResponseEntity<>(bills.get(), HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
     }
 
     @GetMapping(value = "/bill/remove/{id}")
     public ResponseEntity<BillsEntity> trash(@PathVariable Integer id) {
         log.info("Removing bill id=" + id);
         billsService.removeBill(id);
-        BillsEntity bill = billsService.getOneBill(id);
-        return new ResponseEntity<>(bill, HttpStatus.OK);
+        Optional<BillsEntity> bill = billsService.getOneBill(id);
+        if (bill.isPresent()) {
+            return new ResponseEntity<>(bill.get(), HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @GetMapping(value = "/bill/removeall")
     public ResponseEntity<Void> trash() {
         log.info("Removing all bills.");
         billsService.removeAllBills();
-        return new ResponseEntity<Void>(HttpStatus.GONE);
+        return new ResponseEntity<>(HttpStatus.GONE);
     }
 
-//    @RequestMapping(value = "/bill/add", method = RequestMethod.POST)
-//    @ResponseBody
-//    @ResponseStatus(HttpStatus.CREATED)
-//    public BillsEntity add(@Valid @RequestBody BillsEntity billsEntity, BindingResult bindingResult) {
-//        if (bindingResult.hasErrors()) {
-//            log.error("Binding error -> Bills / add");
-//            bindingResult.getAllErrors().forEach(l -> log.error(l.getDefaultMessage()));
-//        }
-//        log.info("Creating bill " + billsEntity.toString());
-//        billsService.addBill(billsEntity);
-//        return billsEntity;
-//    }
-
-    @PostMapping(value = "/bill/add")
-    public ResponseEntity<BillsEntity> createBill(@RequestBody BillsEntity billsEntity, BindingResult errors) {
+    @PostMapping(value = "/bill/add", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ResponseEntity<BillsEntity> createBill(@Valid @RequestBody BillsEntity billsEntity) {
         log.info("Creating Bill : {}", billsEntity);
-
-//        if (errors.hasErrors()) {
-//            return new ResponseEntity(new CustomErrorType("Unable to create. "), HttpStatus.CONFLICT);
-//        }
-        billsService.checkBill(billsEntity, errors);
-        if (errors.hasErrors()) {
-            log.error("Unable to create. ");
-            return new ResponseEntity(new CustomErrorType("Unable to create. "), HttpStatus.CONFLICT);
-        }
         billsService.addBill(billsEntity);
-
-//        HttpHeaders headers = new HttpHeaders();
-//        headers.setLocation(ucBuilder.path("/bill/{id}").buildAndExpand(billsEntity.getId()).toUri());
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 }

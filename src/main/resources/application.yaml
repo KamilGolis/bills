@@ -1,7 +1,7 @@
 # Application Info
 info:
-  name: bills
-  description: bills
+  name: Bills
+  description: Bills
   version: 1.0
 
 server:
@@ -14,19 +14,19 @@ spring:
     username: trot
     password: trot
     driver-class-name: org.postgresql.Driver
-    schema: bills
+    schema: app
 
   jpa:
-    show-sql: true
+    show-sql: false
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: create
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQL94Dialect
-        default_schema: bills
-        hbm2ddl.auto: create-drop
-        hibernate.show_sql: true
-        hibernate.format_sql: true
+        default_schema: app
+        hbm2ddl.auto: create
+        hibernate.show_sql: false
+        hibernate.format_sql: false
 
 logging:
   level:
