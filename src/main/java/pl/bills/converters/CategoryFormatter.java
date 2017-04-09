@@ -20,7 +20,7 @@ public class CategoryFormatter implements Formatter<CategoryEntity> {
 
     @Override
     public CategoryEntity parse(String categoryName, Locale locale) throws ParseException {
-        return categoryService.getCategory(categoryName);
+        return categoryService.getCategory(categoryName).get();
     }
 
     @Override

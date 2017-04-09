@@ -6,6 +6,7 @@ import pl.bills.entities.StatusEntity;
 import pl.bills.repository.StatusRepository;
 
 import java.util.Collection;
+import java.util.Optional;
 
 /**
  * Created by trot on 22.01.17.
@@ -13,14 +14,18 @@ import java.util.Collection;
 @Service
 public class StatusService {
 
-    @Autowired
-    StatusRepository statusRepository;
+    private StatusRepository statusRepository;
 
-    public Collection<StatusEntity> getAllStatuses() {
-        return statusRepository.findAll();
+    @Autowired
+    public StatusService(StatusRepository statusRepository) {
+        this.statusRepository = statusRepository;
     }
 
-    public StatusEntity getStatus(String name) {
+    public Optional<Collection<StatusEntity>> getAllStatuses() {
+        return Optional.ofNullable(statusRepository.findAll());
+    }
+
+    public Optional<StatusEntity> getStatus(String name) {
         return statusRepository.findByName(name);
     }
 }

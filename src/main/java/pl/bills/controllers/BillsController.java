@@ -7,8 +7,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import pl.bills.dto.CountingDataDTO;
 import pl.bills.entities.BillsEntity;
 import pl.bills.services.BillsService;
+import pl.bills.services.CountingServices;
 
 import javax.validation.Valid;
 import java.util.Collection;
@@ -22,9 +24,12 @@ public class BillsController {
 
     private BillsService billsService;
 
+    private CountingServices countingServices;
+
     @Autowired
-    public BillsController(BillsService billsService) {
+    public BillsController(BillsService billsService, CountingServices countingServices) {
         this.billsService = billsService;
+        this.countingServices = countingServices;
     }
 
     @GetMapping(value = "/bills")
@@ -32,6 +37,17 @@ public class BillsController {
         Optional<Collection<BillsEntity>> bills = billsService.getBills();
         if (bills.isPresent()) {
             log.info("Getting bills. " + bills.get().size() + " items.");
+            return new ResponseEntity<>(bills.get(), HttpStatus.OK);
+        }
+        log.info("Nothing found.");
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    @GetMapping(value = "/bills/deleted")
+    public ResponseEntity<Collection<BillsEntity>> getAllDeletedBills() {
+        Optional<Collection<BillsEntity>> bills = billsService.getDeletedBills();
+        if (bills.isPresent()) {
+            log.info("Getting deleted bills. " + bills.get().size() + " items.");
             return new ResponseEntity<>(bills.get(), HttpStatus.OK);
         }
         log.info("Nothing found.");
@@ -57,6 +73,7 @@ public class BillsController {
             log.info("Found " + bills.get().size() + " items.");
             return new ResponseEntity<>(bills.get(), HttpStatus.OK);
         }
+        log.info("Nothing found.");
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
     }
@@ -69,10 +86,11 @@ public class BillsController {
         if (bill.isPresent()) {
             return new ResponseEntity<>(bill.get(), HttpStatus.OK);
         }
+        log.info("Nothing found.");
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @GetMapping(value = "/bill/removeall")
+    @GetMapping(value = "/bill/remove/all")
     public ResponseEntity<Void> trash() {
         log.info("Removing all bills.");
         billsService.removeAllBills();
@@ -86,4 +104,14 @@ public class BillsController {
         billsService.addBill(billsEntity);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
+
+    @GetMapping(value = "/bills/counts")
+    public ResponseEntity<CountingDataDTO> getBillsTotals() {
+        CountingDataDTO dataDTO = countingServices.getAllTotals();
+        log.info("Total bills cost is " + dataDTO.getTotalBillsPrice());
+        log.info("Biggest bill cost is " + dataDTO.getBiggestBillPrice());
+        log.info("Most frequent bill (title) " + dataDTO.getMostFrequentBillTitle());
+        return new ResponseEntity<CountingDataDTO>(dataDTO, HttpStatus.OK);
+    }
+
 }

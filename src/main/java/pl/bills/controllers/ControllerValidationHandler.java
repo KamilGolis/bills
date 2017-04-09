@@ -21,8 +21,13 @@ import java.util.Locale;
  */
 @ControllerAdvice
 public class ControllerValidationHandler {
-    @Autowired
+
     private MessageSource msgSource;
+
+    @Autowired
+    public ControllerValidationHandler(MessageSource msgSource) {
+        this.msgSource = msgSource;
+    }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)

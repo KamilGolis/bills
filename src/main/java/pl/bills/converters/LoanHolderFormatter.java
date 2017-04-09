@@ -22,7 +22,7 @@ public class LoanHolderFormatter implements Formatter<LoanHolderEntity> {
 
     @Override
     public LoanHolderEntity parse(String name, Locale locale) throws ParseException {
-        return loanHolderService.getLoan(name);
+        return loanHolderService.getLoan(name).get();
     }
 
     @Override

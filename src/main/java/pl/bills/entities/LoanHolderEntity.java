@@ -1,6 +1,7 @@
 package pl.bills.entities;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -37,6 +38,7 @@ public class LoanHolderEntity {
     @Column(length = 26)
     private String bankAccountNumber;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "loanHolder", fetch = FetchType.EAGER)
     private List<BillsEntity> billsEntity;
 

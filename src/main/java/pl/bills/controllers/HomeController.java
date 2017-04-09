@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
-import pl.bills.services.BillsService;
 import pl.bills.services.CountingServices;
 
 /**
@@ -25,9 +24,9 @@ public class HomeController {
     @RequestMapping("/home")
     public String home(Model model) {
         model.addAttribute("activeMenu", "home");
-        model.addAttribute("total", countingServices.totalBillsPrice());
-        model.addAttribute("biggest", countingServices.biggestBillPrice());
-        model.addAttribute("frequent", countingServices.mostFrequentBill());
+        model.addAttribute("total", countingServices.getAllTotals().getTotalBillsPrice());
+        model.addAttribute("biggest", countingServices.getAllTotals().getBiggestBillPrice());
+        model.addAttribute("frequent", countingServices.getAllTotals().getMostFrequentBillTitle());
         return "home";
     }
 }

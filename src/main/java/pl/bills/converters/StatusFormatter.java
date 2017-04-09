@@ -20,7 +20,7 @@ public class StatusFormatter implements Formatter<StatusEntity> {
 
     @Override
     public StatusEntity parse(String statusName, Locale locale) throws ParseException {
-        return statusService.getStatus(statusName);
+        return statusService.getStatus(statusName).get();
     }
 
     @Override

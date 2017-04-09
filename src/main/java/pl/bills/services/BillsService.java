@@ -48,10 +48,10 @@ public class BillsService {
     public void removeBill(Integer id) {
         Optional<BillsEntity> bill = billsRepository.findById(id);
         if (bill.isPresent()) {
-            CategoryEntity category = categoryRepository.findByName(CategoryEnum.TRASH.get());
-            if (category != null) {
+            Optional<CategoryEntity> category = categoryRepository.findByName(CategoryEnum.TRASH.get());
+            if (category.isPresent()) {
                 BillsEntity foundBill = bill.get();
-                foundBill.setCategory(category);
+                foundBill.setCategory(category.get());
                 billsRepository.save(foundBill);
             }
         }
@@ -63,10 +63,11 @@ public class BillsService {
 
     public void undoBill(Integer id) {
         billsRepository.findById(id).ifPresent(bill ->
-                Optional.ofNullable(categoryRepository.findAllByName(CategoryEnum.MAIN.get())).ifPresent(category -> {
-                    bill.setCategory((CategoryEntity) category);
-                    billsRepository.save(bill);
-                })
+                Optional.ofNullable(categoryRepository.findAllByName(CategoryEnum.MAIN.get()))
+                        .ifPresent(category -> {
+                            bill.setCategory((CategoryEntity) category.get());
+                            billsRepository.save(bill);
+                        })
         );
     }
 
