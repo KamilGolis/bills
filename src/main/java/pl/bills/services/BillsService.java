@@ -58,8 +58,7 @@ public class BillsService {
                 billsRepository.save(bill);
             }
             return true;
-        }
-        else return false;
+        } else return false;
     }
 
     public void removeAllBills() {
@@ -68,10 +67,11 @@ public class BillsService {
 
     public void undoBill(Integer id) {
         Optional.ofNullable(billsRepository.findById(id)).ifPresent(bill ->
-        Optional.ofNullable(categoryRepository.findAllByName(CategoryEnum.MAIN.get())).ifPresent(category -> {
-                bill.setCategory((CategoryEntity) category);
-                billsRepository.save(bill);
-            })
+                Optional.ofNullable(categoryRepository.findByName(CategoryEnum.MAIN.get())).
+                        ifPresent(category -> {
+                            bill.setCategory(category);
+                            billsRepository.save(bill);
+                        })
         );
     }
 

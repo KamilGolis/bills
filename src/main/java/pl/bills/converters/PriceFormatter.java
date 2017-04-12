@@ -1,5 +1,7 @@
 package pl.bills.converters;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.format.Formatter;
 import org.springframework.stereotype.Component;
 
@@ -15,6 +17,8 @@ import java.util.Locale;
 @Component
 public class PriceFormatter implements Formatter<BigDecimal> {
 
+    private final Logger log = LoggerFactory.getLogger(PriceFormatter.class);
+
     public PriceFormatter() {
         super();
     }
@@ -22,13 +26,15 @@ public class PriceFormatter implements Formatter<BigDecimal> {
     @Override
     public BigDecimal parse(String text, Locale locale) throws ParseException {
         text = text.replaceAll(" ", "");
+        text = text.replaceAll(",", ".");
+
         DecimalFormat df = (DecimalFormat) NumberFormat.getNumberInstance();
         df.setParseBigDecimal(true);
         BigDecimal bd = BigDecimal.ZERO;
         try {
             return (BigDecimal) df.parseObject(text);
         } catch (ParseException e) {
-            System.err.println("Price converter -> converting null to BigDecimal.ZERO.");
+            log.info("Price converter -> converting null to BigDecimal.ZERO.");
         }
         return bd == null ? BigDecimal.ZERO : bd;
 

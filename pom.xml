@@ -47,6 +47,15 @@
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.thymeleaf.extras</groupId>
+            <artifactId>thymeleaf-extras-springsecurity3</artifactId>
+            <version>3.0.2.RELEASE</version>
+        </dependency>
+        <dependency>
             <groupId>org.xerial</groupId>
             <artifactId>sqlite-jdbc</artifactId>
             <version>3.15.1</version>
@@ -85,11 +94,5 @@
             </plugin>
         </plugins>
     </build>
-
-<!--
-    <configuration>
-        <addResources>true</addResources>
-    </configuration>
--->
 
 </project>

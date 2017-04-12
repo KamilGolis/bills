@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+    <title>Bills - login</title>
+</head>
+<body>
+<div th:if="${param.error}">
+    Invalid username and password.
+</div>
+<div th:if="${param.logout}">
+    You have been logged out.
+</div>
+<div>
+    <p> Domyślny email : user@gmail.com</p>
+    <p> Domyślne hasło : password</p>
+</div>
+<form th:action="@{/login}" method="post">
+    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+    <div><label> Email : <input type="email" name="email"/> </label></div>
+    <div><label> Hasło: <input type="password" name="password"/> </label></div>
+    <div><input type="submit" value="Loguj"/></div>
+</form>
+</body>
+</html>
