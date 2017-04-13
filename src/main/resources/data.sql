@@ -17,3 +17,5 @@ INSERT INTO bills (id, comment, price, title, category_id, loan_holder_id, statu
 INSERT INTO bills (id, comment, price, title, category_id, loan_holder_id, status_id) VALUES (4, 'Energia elektryczna - styczeń 2017', 110.32, 'Paliwo', 1, 2, 1);
 INSERT INTO bills (id, comment, price, title, category_id, loan_holder_id, status_id) VALUES (5, 'Gaz - styczeń 2017', 23.55, 'Gaz', 1, 2, 1);
 INSERT INTO bills (id, comment, price, title, category_id, loan_holder_id, status_id) VALUES (6, 'Kredyt - styczeń 2017', 987.26, 'Kredyt hipoteczny', 1, 2, 2);
+
+INSERT INTO user (email, password_hash, role) VALUES ('demo@gmail.com', '$2a$10$ebyC4Z5WtCXXc.HGDc1Yoe6CLFzcntFmfse6/pTj7CeDY5I05w16C', 'ADMIN');

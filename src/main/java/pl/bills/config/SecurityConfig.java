@@ -1,49 +1,77 @@
 package pl.bills.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 /**
  * Created by trot on 12.04.17.
  */
 @Configuration
+@EnableGlobalMethodSecurity(prePostEnabled = true)
+@Order(SecurityProperties.ACCESS_OVERRIDE_ORDER)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
-    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-        auth
-                .inMemoryAuthentication()
-                .withUser("user@gmail.com").password("password").roles("USER");
-    }
+    private UserDetailsService userDetailsService;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http
-                .authorizeRequests()
-
+        http.authorizeRequests()
                 .antMatchers("/", "/public/**").permitAll()
-                .antMatchers("/login").permitAll()
-                .antMatchers("/register").permitAll()
-                .anyRequest().authenticated()
-
+                .antMatchers("/users/**").hasAuthority("ADMIN")
+                .anyRequest().fullyAuthenticated()
                 .and()
-
                 .formLogin()
                 .loginPage("/login")
-                .loginProcessingUrl("/login")
-                .failureForwardUrl("/login?error")
-                .defaultSuccessUrl("/")
+                .failureUrl("/login?error")
                 .usernameParameter("email")
-                .passwordParameter("password")
-
+                .permitAll()
                 .and()
-
                 .logout()
                 .logoutUrl("/logout")
-                .logoutSuccessUrl("/login?logout")
-                .invalidateHttpSession(true);
+                .deleteCookies("remember-me")
+                .logoutSuccessUrl("/")
+                .permitAll()
+                .and()
+                .rememberMe();
+//        http
+//                .authorizeRequests()
+//
+//                .antMatchers("/", "/public/**").permitAll()
+//                .antMatchers("/login").permitAll()
+//                .antMatchers("/register").permitAll()
+//                .anyRequest().authenticated()
+//
+//                .and()
+//
+//                .formLogin()
+//                .loginPage("/login")
+//                .loginProcessingUrl("/login")
+//                .failureForwardUrl("/login?error")
+//                .defaultSuccessUrl("/")
+//                .usernameParameter("email")
+//                .passwordParameter("password")
+//
+//                .and()
+//
+//                .logout()
+//                .logoutUrl("/logout")
+//                .logoutSuccessUrl("/login?logout")
+//                .invalidateHttpSession(true);
+    }
+
+    @Override
+    public void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth
+                .userDetailsService(userDetailsService)
+                .passwordEncoder(new BCryptPasswordEncoder());
     }
 }

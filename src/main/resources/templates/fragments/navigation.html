@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 <head>
     <meta charset="UTF-8"/>
 </head>
@@ -15,9 +16,14 @@
         <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav navbar-right">
                 <li><a th:href="@{home}">Panel główny</a></li>
-                <li><a href="settings.html">Ustawienia</a></li>
-                <li><a href="profile.html">Profil</a></li>
-                <li><a href="help.html">Pomoc</a></li>
+                <li><a href="#">Ustawienia</a></li>
+                <li><a href="#">Profil</a></li>
+                <li><a href="#">Pomoc</a></li>
+                <li sec:authorize="isAuthenticated()">
+                    <form action="#" th:action="@{/logout}" method="post">
+                        <button type="submit" class="btn btn-side btn-primary">Wyloguj</button>
+                    </form>
+                </li>
             </ul>
             <!--<form class="navbar-form navbar-right" action="/search" method="GET">
                 <input type="text" class="form-control" placeholder="Szukaj..." name="search" id="search"
