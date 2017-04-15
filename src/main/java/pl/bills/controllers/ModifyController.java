@@ -1,8 +1,9 @@
 package pl.bills.controllers;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
-import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -16,6 +17,7 @@ import pl.bills.services.LoanHolderService;
 import pl.bills.services.StatusService;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 
 /**
  * Created by trot on 19.01.17.
@@ -24,27 +26,31 @@ import javax.validation.Valid;
 @Controller
 public class ModifyController {
 
-    @Autowired
-    BillsService billsService;
+    private static final Logger LOGGER = LoggerFactory.getLogger(ModifyController.class);
+
+    private BillsService billsService;
+    private StatusService statusService;
+    private CategoryService categoryService;
+    private LoanHolderService loanHolderService;
 
     @Autowired
-    StatusService statusService;
-
-    @Autowired
-    CategoryService categoryService;
-
-    @Autowired
-    LoanHolderService loanHolderService;
+    public ModifyController(BillsService billsService, StatusService statusService, CategoryService categoryService, LoanHolderService loanHolderService) {
+        this.billsService = billsService;
+        this.statusService = statusService;
+        this.categoryService = categoryService;
+        this.loanHolderService = loanHolderService;
+    }
 
     @RequestMapping(value = "/modify", method = RequestMethod.GET)
     public ModelAndView modifyForm(@RequestParam Integer id, Model model) {
+        LOGGER.info("Modifying bill id=%s", id);
         model.addAttribute("activeMenu", "bills");
         ModelAndView mav = new ModelAndView("editRecord");
-        mav.addObject("billsList", billsService.getBills());
-        mav.addObject("statusList", statusService.getAllStatuses());
-        mav.addObject("categoryList", categoryService.getAll());
-        mav.addObject("loanHoldersList", loanHolderService.getAllLoanHolders());
-        mav.addObject("form", billsService.getOneBill(id));
+        mav.addObject("billsList", billsService.getBills().orElse(new ArrayList<>()));
+        mav.addObject("statusList", statusService.getAllStatuses().orElse(new ArrayList<>()));
+        mav.addObject("categoryList", categoryService.getAll().orElse(new ArrayList<>()));
+        mav.addObject("loanHoldersList", loanHolderService.getAllLoanHolders().orElse(new ArrayList<>()));
+        mav.addObject("form", billsService.getOneBill(id).orElse(new BillsEntity()));
         return mav;
     }
 
@@ -57,8 +63,8 @@ public class ModifyController {
     public String modify(@Valid @ModelAttribute("form") BillsEntity billsEntity, @RequestParam Integer id,
                          BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            System.err.println("Binding error -> Modify / apply");
-            bindingResult.getAllErrors().forEach(System.err::println);
+            LOGGER.error("Binding error -> Modify / apply");
+            bindingResult.getAllErrors().forEach(e -> LOGGER.error(e.getDefaultMessage()));
             return "error";
         }
         billsEntity.setId(id);

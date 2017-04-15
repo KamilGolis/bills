@@ -1,5 +1,7 @@
 package pl.bills.converters;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.Formatter;
 import org.springframework.stereotype.Component;
@@ -7,24 +9,30 @@ import pl.bills.entities.CategoryEntity;
 import pl.bills.services.CategoryService;
 
 import java.text.ParseException;
-import java.util.Collection;
 import java.util.Locale;
+import java.util.NoSuchElementException;
 
 /**
  * Created by trot on 04.02.17.
  */
 @Component
 public class CategoryFormatter implements Formatter<CategoryEntity> {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(CategoryFormatter.class);
+
     @Autowired
     CategoryService categoryService;
 
     @Override
     public CategoryEntity parse(String categoryName, Locale locale) throws ParseException {
-        return categoryService.getCategory(categoryName);
+        LOGGER.info("Converting category=%s to entity", categoryName);
+        return categoryService.getCategory(categoryName)
+                .orElseThrow(() -> new NoSuchElementException(String.format("Category=%s was not found", categoryName)));
     }
 
     @Override
     public String print(CategoryEntity category, Locale locale) {
+        LOGGER.info("Converting category entity to string");
         return category.getName();
     }
 }

@@ -9,6 +9,7 @@ import pl.bills.services.LoanHolderService;
 
 import java.text.ParseException;
 import java.util.Locale;
+import java.util.NoSuchElementException;
 
 /**
  * Created by trot on 09.02.17.
@@ -22,7 +23,8 @@ public class LoanHolderFormatter implements Formatter<LoanHolderEntity> {
 
     @Override
     public LoanHolderEntity parse(String name, Locale locale) throws ParseException {
-        return loanHolderService.getLoan(name);
+        return loanHolderService.getLoan(name)
+                .orElseThrow(() -> new NoSuchElementException(String.format("Loan holder=%s was not found", name)));
     }
 
     @Override

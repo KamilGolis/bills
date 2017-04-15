@@ -15,11 +15,12 @@ import java.util.NoSuchElementException;
 @ControllerAdvice
 public class ExceptionHandlerControllerAdvice {
 
-    private static Logger LOGGER = LoggerFactory.getLogger(ExceptionHandlerControllerAdvice.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ExceptionHandlerControllerAdvice.class);
 
     @ExceptionHandler(NoSuchElementException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public String handleNoSuchElementException(NoSuchElementException e) {
+        LOGGER.error("No such element - " + e.getMessage());
         return e.getMessage();
     }
 

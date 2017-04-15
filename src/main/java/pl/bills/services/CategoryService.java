@@ -7,6 +7,7 @@ import pl.bills.enums.CategoryEnum;
 import pl.bills.repository.CategoryRepository;
 
 import java.util.Collection;
+import java.util.Optional;
 
 /**
  * Created by trot on 04.02.17.
@@ -14,18 +15,22 @@ import java.util.Collection;
 @Service
 public class CategoryService {
 
-    @Autowired
-    CategoryRepository categoryRepository;
+    private CategoryRepository categoryRepository;
 
-    public Collection<CategoryEntity> getAll() {
-        return categoryRepository.findAll();
+    @Autowired
+    public CategoryService(CategoryRepository categoryRepository) {
+        this.categoryRepository = categoryRepository;
     }
 
-    public CategoryEntity getDefaultCategory() {
+    public Optional<Collection<CategoryEntity>> getAll() {
+        return Optional.ofNullable(categoryRepository.findAll());
+    }
+
+    public Optional<CategoryEntity> getDefaultCategory() {
         return categoryRepository.findByName(CategoryEnum.MAIN.get());
     }
 
-    public CategoryEntity getCategory(String categoryName) {
+    public Optional<CategoryEntity> getCategory(String categoryName) {
         return categoryRepository.findByName(categoryName);
     }
 }

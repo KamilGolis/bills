@@ -1,5 +1,7 @@
 package pl.bills.controllers;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,6 +18,7 @@ import pl.bills.services.LoanHolderService;
 import pl.bills.services.StatusService;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 
 /**
  * Created by trot on 19.01.17.
@@ -24,26 +27,30 @@ import javax.validation.Valid;
 @Controller
 public class BillsController {
 
-    @Autowired
-    BillsService billsService;
+    private static final Logger LOGGER = LoggerFactory.getLogger(BillsController.class);
+
+    private BillsService billsService;
+    private StatusService statusService;
+    private CategoryService categoryService;
+    private LoanHolderService loanHolderService;
 
     @Autowired
-    StatusService statusService;
-
-    @Autowired
-    CategoryService categoryService;
-
-    @Autowired
-    LoanHolderService loanHolderService;
+    public BillsController(BillsService billsService, StatusService statusService, CategoryService categoryService, LoanHolderService loanHolderService) {
+        this.billsService = billsService;
+        this.statusService = statusService;
+        this.categoryService = categoryService;
+        this.loanHolderService = loanHolderService;
+    }
 
     @RequestMapping(value = "/bills", method = RequestMethod.GET)
     public ModelAndView bills(Model model) {
+        LOGGER.info("Getting all bills list");
         model.addAttribute("activeMenu", "bills");
         ModelAndView mav = new ModelAndView("bills");
-        mav.addObject("billsList", billsService.getBills());
-        mav.addObject("statusList", statusService.getAllStatuses());
-        mav.addObject("categoryList", categoryService.getAll());
-        mav.addObject("loanList", loanHolderService.getAllLoanHolders());
+        mav.addObject("billsList", billsService.getBills().orElse(new ArrayList<>()));
+        mav.addObject("statusList", statusService.getAllStatuses().orElse(new ArrayList<>()));
+        mav.addObject("categoryList", categoryService.getAll().orElse(new ArrayList<>()));
+        mav.addObject("loanList", loanHolderService.getAllLoanHolders().orElse(new ArrayList<>()));
         mav.addObject("form", new BillsEntity());
         return mav;
     }
@@ -51,17 +58,20 @@ public class BillsController {
     @RequestMapping(value = "/search")
     public ModelAndView search(ModelAndView mav, @RequestParam String search) {
         mav = new ModelAndView("bills");
-        mav.addObject("billsList", billsService.search(search));
+        mav.addObject("billsList", billsService.search(search).orElse(new ArrayList<>()));
         return mav;
     }
 
     @RequestMapping(value = "/remove")
     public String trash(@RequestParam Integer id) {
-        return billsService.removeBill(id) ? "redirect:bills" : "bills";
+        LOGGER.info("Removing bill id=%s", id);
+        billsService.removeBill(id);
+        return "redirect:bills";
     }
 
     @RequestMapping(value = "/removeall")
     public String trash() {
+        LOGGER.info("Removing all bills");
         billsService.removeAllBills();
         return "redirect:bills";
     }
@@ -69,12 +79,11 @@ public class BillsController {
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     public String add(@Valid @ModelAttribute BillsEntity billsEntity, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            System.err.println("Binding error -> Bills / add");
+            LOGGER.info("Binding error -> Bills / add");
             bindingResult.getAllErrors().forEach(System.err::println);
             return "error";
         }
         billsService.addBill(billsEntity);
         return "redirect:bills";
     }
-
 }

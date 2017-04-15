@@ -1,5 +1,7 @@
 package pl.bills.controllers;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,8 +16,14 @@ import pl.bills.services.CountingServices;
 @Controller
 public class HomeController {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(HomeController.class);
+
+    private CountingServices countingServices;
+
     @Autowired
-    CountingServices countingServices;
+    public HomeController(CountingServices countingServices) {
+        this.countingServices = countingServices;
+    }
 
     @RequestMapping("/")
     public String index() {
@@ -24,6 +32,7 @@ public class HomeController {
 
     @RequestMapping("/home")
     public String home(Model model) {
+        LOGGER.info("Counting values (biggest, frequent, most used)");
         model.addAttribute("activeMenu", "home");
         model.addAttribute("total", countingServices.totalBillsPrice());
         model.addAttribute("biggest", countingServices.biggestBillPrice());

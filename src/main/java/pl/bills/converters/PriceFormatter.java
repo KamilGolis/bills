@@ -17,7 +17,7 @@ import java.util.Locale;
 @Component
 public class PriceFormatter implements Formatter<BigDecimal> {
 
-    private final Logger log = LoggerFactory.getLogger(PriceFormatter.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(PriceFormatter.class);
 
     public PriceFormatter() {
         super();
@@ -25,6 +25,7 @@ public class PriceFormatter implements Formatter<BigDecimal> {
 
     @Override
     public BigDecimal parse(String text, Locale locale) throws ParseException {
+        LOGGER.info("Converting price=%s to big decimal", text);
         text = text.replaceAll(" ", "");
         text = text.replaceAll(",", ".");
 
@@ -34,7 +35,7 @@ public class PriceFormatter implements Formatter<BigDecimal> {
         try {
             return (BigDecimal) df.parseObject(text);
         } catch (ParseException e) {
-            log.info("Price converter -> converting null to BigDecimal.ZERO.");
+            LOGGER.info("Price converter -> converting null to BigDecimal.ZERO.");
         }
         return bd == null ? BigDecimal.ZERO : bd;
 

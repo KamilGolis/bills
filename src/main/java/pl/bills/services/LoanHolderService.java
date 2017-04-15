@@ -6,6 +6,7 @@ import pl.bills.entities.LoanHolderEntity;
 import pl.bills.repository.LoanHolderRepository;
 
 import java.util.Collection;
+import java.util.Optional;
 
 /**
  * Created by trot on 09.02.17.
@@ -13,14 +14,18 @@ import java.util.Collection;
 @Service
 public class LoanHolderService {
 
-    @Autowired
-    LoanHolderRepository loanHolderRepository;
+    private LoanHolderRepository loanHolderRepository;
 
-    public Collection<LoanHolderEntity> getAllLoanHolders() {
-        return loanHolderRepository.findAll();
+    @Autowired
+    public LoanHolderService(LoanHolderRepository loanHolderRepository) {
+        this.loanHolderRepository = loanHolderRepository;
     }
 
-    public LoanHolderEntity getLoan(String loanHolderName) {
+    public Optional<Collection<LoanHolderEntity>> getAllLoanHolders() {
+        return Optional.ofNullable(loanHolderRepository.findAll());
+    }
+
+    public Optional<LoanHolderEntity> getLoan(String loanHolderName) {
         return loanHolderRepository.findByName(loanHolderName);
     }
 }
