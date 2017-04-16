@@ -1,12 +1,15 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 <head>
     <meta charset="UTF-8"/>
 </head>
 <body>
 
 <div th:fragment="content">
-    <h1 class="page-header">Witaj użytkowniku.
+    <h1 class="page-header">
+        <p sec:authorize="isAnonymous()">Witaj użytkowniku.</p>
+        <p sec:authorize="isAuthenticated()">Witaj (<span sec:authentication="name"></span>)</p>
     </h1>
     <div class="row placeholders">
         <div class="col-xs-6 col-sm-3 placeholder">
@@ -24,7 +27,10 @@
     </div>
     <h2 class="sub-header">Aplikacja do zarządzania domowymi rachunkami.</h2>
     <p>To tylko aplikacja demo. Uruchamiana raz dziennie, powoduje wykasowanie bazy.</p>
-    <p>Domyślny użytkownik ma e-mail : <strong>demo@gmail.com</strong> i hasło : <strong>demo</strong></p>
+    <p sec:authorize="isAnonymous()">Domyślny użytkownik ma e-mail : <strong>demo@gmail.com</strong> i hasło : <strong>demo</strong></p>
+    <p sec:authorize="isAuthenticated()">Zalogowani użytkownicy mają możliwość
+        <a th:href="@{bills}">dodawać i usuwać</a> rekordy oraz przeglądać
+        <a th:href="@{trash}">usunięte</a> dane.</p>
 </div>
 </body>
 </html>

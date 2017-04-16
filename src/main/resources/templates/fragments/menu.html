@@ -1,18 +1,21 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 <head>
     <meta charset="UTF-8"/>
 </head>
 <body>
 <div th:fragment="left (activeMenu)">
     <ul class="nav nav-sidebar">
-        <li th:class="${activeMenu == 'home'}? 'active'"><a th:href="@{home}">Podsumowanie</a></li>
-        <li th:class="${activeMenu == 'raport'}? 'active'"><a th:href="@{home}">Raporty</a></li>
-        <li th:class="${activeMenu == 'import'}? 'active'"><a th:href="@{home}">Inport/Export</a></li>
+        <li sec:authorize="isAnonymous()"><a th:href="@{/login}">Zaloguj się</a></li>
+        <li sec:authorize="isAnonymous()"><a th:href="@{/login}">Zarejestruj nowe konto</a></li>
+        <li sec:authorize="isAuthenticated()" th:class="${activeMenu == 'home'}? 'active'"><a th:href="@{home}">Podsumowanie</a></li>
+        <!--<li th:class="${activeMenu == 'raport'}? 'active'"><a th:href="@{home}">Raporty</a></li>-->
+        <!--<li th:class="${activeMenu == 'import'}? 'active'"><a th:href="@{home}">Inport/Export</a></li>-->
     </ul>
     <ul class="nav nav-sidebar">
-        <li th:class="${activeMenu == 'bills'}? 'active'"><a th:href="@{bills}">Wszystkie rachunki</a></li>
-        <li th:class="${activeMenu == 'trash'}? 'active'"><a th:href="@{trash}">Elementy usunięte</a></li>
+        <li sec:authorize="isAuthenticated()" th:class="${activeMenu == 'bills'}? 'active'"><a th:href="@{bills}">Wszystkie rachunki</a></li>
+        <li sec:authorize="isAuthenticated()" th:class="${activeMenu == 'trash'}? 'active'"><a th:href="@{trash}">Elementy usunięte</a></li>
     </ul>
 </div>
 </body>
