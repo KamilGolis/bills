@@ -39,14 +39,14 @@ public class DeletedBillsController {
 
     @RequestMapping(value = "/undo")
     public String undo(@RequestParam Integer id) {
-        LOGGER.info("Doing undo on bill id=%s", id);
+        LOGGER.info("Doing undo on bill id={}", id);
         billsService.undoBill(id);
         return "redirect:trash";
     }
 
     @RequestMapping(value = "/delete")
     public String delete(@RequestParam Integer id) {
-        LOGGER.info("Deleting bill id=%s", id);
+        LOGGER.info("Deleting bill id={}", id);
         billsService.deleteBill(id);
         return "redirect:trash";
     }

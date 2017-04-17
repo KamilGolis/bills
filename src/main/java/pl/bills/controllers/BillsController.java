@@ -64,7 +64,7 @@ public class BillsController {
 
     @RequestMapping(value = "/remove")
     public String trash(@RequestParam Integer id) {
-        LOGGER.info("Removing bill id=%s", id);
+        LOGGER.info("Removing bill id={}", id);
         billsService.removeBill(id);
         return "redirect:bills";
     }
@@ -80,7 +80,7 @@ public class BillsController {
     public String add(@Valid @ModelAttribute BillsEntity billsEntity, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             LOGGER.info("Binding error -> Bills / add");
-            bindingResult.getAllErrors().forEach(System.err::println);
+            bindingResult.getAllErrors().forEach(e -> LOGGER.error("Binding errors " + e.getDefaultMessage()));
             return "error";
         }
         billsService.addBill(billsEntity);

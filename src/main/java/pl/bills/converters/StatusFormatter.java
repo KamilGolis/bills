@@ -25,7 +25,7 @@ public class StatusFormatter implements Formatter<StatusEntity> {
 
     @Override
     public StatusEntity parse(String statusName, Locale locale) throws ParseException {
-        LOGGER.info("Converting status=%s to status entity", statusName);
+        LOGGER.info("Converting status={} to status entity", statusName);
         return statusService.getStatus(statusName)
                 .orElseThrow(() -> new NoSuchElementException(String.format("Status=%s was not found", statusName)));
     }

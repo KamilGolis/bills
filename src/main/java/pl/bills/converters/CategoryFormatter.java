@@ -25,7 +25,7 @@ public class CategoryFormatter implements Formatter<CategoryEntity> {
 
     @Override
     public CategoryEntity parse(String categoryName, Locale locale) throws ParseException {
-        LOGGER.info("Converting category=%s to entity", categoryName);
+        LOGGER.info("Converting category={} to entity", categoryName);
         return categoryService.getCategory(categoryName)
                 .orElseThrow(() -> new NoSuchElementException(String.format("Category=%s was not found", categoryName)));
     }

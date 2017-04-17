@@ -43,7 +43,7 @@ public class ModifyController {
 
     @RequestMapping(value = "/modify", method = RequestMethod.GET)
     public ModelAndView modifyForm(@RequestParam Integer id, Model model) {
-        LOGGER.info("Modifying bill id=%s", id);
+        LOGGER.info("Modifying bill id={}", id);
         model.addAttribute("activeMenu", "bills");
         ModelAndView mav = new ModelAndView("editRecord");
         mav.addObject("billsList", billsService.getBills().orElse(new ArrayList<>()));

@@ -1,15 +1,21 @@
 package pl.bills.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import pl.bills.entities.BillsEntity;
 import pl.bills.entities.CategoryEntity;
 import pl.bills.enums.CategoryEnum;
+import pl.bills.other.AuthenticationFacade;
+import pl.bills.other.CurrentUser;
 import pl.bills.repository.BillsRepository;
 import pl.bills.repository.CategoryRepository;
 
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -21,16 +27,19 @@ public class BillsService {
 
     private BillsRepository billsRepository;
     private CategoryRepository categoryRepository;
+    private AuthenticationFacade authenticationFacade;
 
     @Autowired
-    public BillsService(BillsRepository billsRepository, CategoryRepository categoryRepository) {
+    public BillsService(BillsRepository billsRepository, CategoryRepository categoryRepository, AuthenticationFacade authenticationFacade) {
         this.billsRepository = billsRepository;
         this.categoryRepository = categoryRepository;
+        this.authenticationFacade = authenticationFacade;
     }
 
     public Optional<Collection<BillsEntity>> getBills() {
         return Optional.ofNullable(billsRepository.findAll()
                 .stream()
+                .filter(u -> Objects.equals(u.getUser().getId(), authenticationFacade.getCurrentUser().getId()))
                 .filter(b -> !b.getCategory().getName().equals(CategoryEnum.TRASH.get()))
                 .sorted(Comparator.comparing(BillsEntity::getPrice))
                 .collect(Collectors.toList()));

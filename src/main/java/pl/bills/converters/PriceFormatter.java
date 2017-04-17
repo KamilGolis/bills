@@ -25,7 +25,7 @@ public class PriceFormatter implements Formatter<BigDecimal> {
 
     @Override
     public BigDecimal parse(String text, Locale locale) throws ParseException {
-        LOGGER.info("Converting price=%s to big decimal", text);
+        LOGGER.info("Converting price={} to big decimal", text);
         text = text.replaceAll(" ", "");
         text = text.replaceAll(",", ".");
 

@@ -1,6 +1,7 @@
 package pl.bills.other;
 
 import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.stereotype.Component;
 import pl.bills.entities.UserEntity;
 import pl.bills.enums.Role;
 

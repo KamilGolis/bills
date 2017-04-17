@@ -48,14 +48,22 @@ public class BillsEntity {
     @Valid
     private LoanHolderEntity loanHolder;
 
+    @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private UserEntity user;
+
     public BillsEntity() {
     }
 
-    public BillsEntity(String title, CategoryEntity category, StatusEntity status, LoanHolderEntity loanHolder) {
+    public BillsEntity(String comment, BigDecimal price, String title, LocalDate date, CategoryEntity category, StatusEntity status, LoanHolderEntity loanHolder, UserEntity user) {
+        this.comment = comment;
+        this.price = price;
         this.title = title;
+        this.date = date;
         this.category = category;
         this.status = status;
         this.loanHolder = loanHolder;
+        this.user = user;
     }
 
     public LocalDate getDate() {
@@ -121,6 +129,14 @@ public class BillsEntity {
 
     public void setStatus(StatusEntity status) {
         this.status = status;
+    }
+
+    public UserEntity getUser() {
+        return user;
+    }
+
+    public void setUser(UserEntity user) {
+        this.user = user;
     }
 
     @Override

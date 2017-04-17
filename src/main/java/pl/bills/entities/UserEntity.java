@@ -3,6 +3,7 @@ package pl.bills.entities;
 import pl.bills.enums.Role;
 
 import javax.persistence.*;
+import java.util.Set;
 
 /**
  * Created by trot on 12.04.17.
@@ -13,7 +14,7 @@ public class UserEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false, updatable = false)
+    @Column(name = "user_id", nullable = false, updatable = false)
     private Long id;
 
     @Column(name = "email", nullable = false, unique = true)
@@ -25,6 +26,9 @@ public class UserEntity {
     @Column(name = "role", nullable = false)
     @Enumerated(EnumType.STRING)
     private Role role;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private Set<BillsEntity> billsEntity;
 
     public Long getId() {
         return id;
@@ -56,5 +60,13 @@ public class UserEntity {
 
     public void setRole(Role role) {
         this.role = role;
+    }
+
+    public Set<BillsEntity> getBillsEntity() {
+        return billsEntity;
+    }
+
+    public void setBillsEntity(Set<BillsEntity> billsEntity) {
+        this.billsEntity = billsEntity;
     }
 }
