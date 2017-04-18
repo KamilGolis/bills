@@ -3,6 +3,8 @@ package pl.bills.controllers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import pl.bills.entities.BillsEntity;
+import pl.bills.other.CurrentUser;
 import pl.bills.services.BillsService;
 import pl.bills.services.CategoryService;
 import pl.bills.services.LoanHolderService;
@@ -62,6 +65,7 @@ public class BillsController {
         return mav;
     }
 
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
     @RequestMapping(value = "/remove")
     public String trash(@RequestParam Integer id) {
         LOGGER.info("Removing bill id={}", id);
@@ -69,6 +73,7 @@ public class BillsController {
         return "redirect:bills";
     }
 
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
     @RequestMapping(value = "/removeall")
     public String trash() {
         LOGGER.info("Removing all bills");
@@ -76,13 +81,17 @@ public class BillsController {
         return "redirect:bills";
     }
 
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
     @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public String add(@Valid @ModelAttribute BillsEntity billsEntity, BindingResult bindingResult) {
+    public String add(@Valid @ModelAttribute BillsEntity billsEntity,
+                      @ModelAttribute("currentUser") CurrentUser currentUser,
+                      BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             LOGGER.info("Binding error -> Bills / add");
             bindingResult.getAllErrors().forEach(e -> LOGGER.error("Binding errors " + e.getDefaultMessage()));
             return "error";
         }
+        billsEntity.setUser(currentUser.getUser());
         billsService.addBill(billsEntity);
         return "redirect:bills";
     }

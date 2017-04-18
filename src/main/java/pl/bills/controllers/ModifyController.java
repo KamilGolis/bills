@@ -4,13 +4,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import pl.bills.entities.BillsEntity;
+import pl.bills.other.CurrentUser;
 import pl.bills.services.BillsService;
 import pl.bills.services.CategoryService;
 import pl.bills.services.LoanHolderService;
@@ -41,6 +44,7 @@ public class ModifyController {
         this.loanHolderService = loanHolderService;
     }
 
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
     @RequestMapping(value = "/modify", method = RequestMethod.GET)
     public ModelAndView modifyForm(@RequestParam Integer id, Model model) {
         LOGGER.info("Modifying bill id={}", id);
@@ -59,14 +63,18 @@ public class ModifyController {
         binder.registerCustomEditor(String.class, new StringTrimmerEditor(false));
     }
 
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
     @RequestMapping(value = "/apply", method = RequestMethod.POST)
-    public String modify(@Valid @ModelAttribute("form") BillsEntity billsEntity, @RequestParam Integer id,
+    public String modify(@Valid @ModelAttribute("form") BillsEntity billsEntity,
+                         @ModelAttribute("currentUser") CurrentUser currentUser,
+                         @RequestParam Integer id,
                          BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             LOGGER.error("Binding error -> Modify / apply");
             bindingResult.getAllErrors().forEach(e -> LOGGER.error(e.getDefaultMessage()));
             return "error";
         }
+        billsEntity.setUser(currentUser.getUser());
         billsEntity.setId(id);
         billsService.addBill(billsEntity);
         return "redirect:bills";

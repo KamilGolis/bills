@@ -3,6 +3,7 @@ package pl.bills.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import pl.bills.entities.BillsEntity;
+import pl.bills.entities.UserEntity;
 
 import java.util.Collection;
 import java.util.Optional;
@@ -25,5 +26,9 @@ public interface BillsRepository extends JpaRepository<BillsEntity, Integer> {
     Optional<BillsEntity> findByTitle(String title);
 
     Optional<BillsEntity> findById(Integer id);
+
+    Optional<BillsEntity> findByIdAndUserId(Integer id, Long userId);
+
+    Optional<Collection<BillsEntity>> findAllByCategoryNameAndUserId(String category, Long id);
 
 }

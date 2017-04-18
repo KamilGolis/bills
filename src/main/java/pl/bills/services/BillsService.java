@@ -1,23 +1,17 @@
 package pl.bills.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import pl.bills.entities.BillsEntity;
 import pl.bills.entities.CategoryEntity;
 import pl.bills.enums.CategoryEnum;
 import pl.bills.other.AuthenticationFacade;
-import pl.bills.other.CurrentUser;
 import pl.bills.repository.BillsRepository;
 import pl.bills.repository.CategoryRepository;
 
 import java.util.Collection;
-import java.util.Comparator;
-import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * Created by trot on 09.01.17.
@@ -37,20 +31,17 @@ public class BillsService {
     }
 
     public Optional<Collection<BillsEntity>> getBills() {
-        return Optional.ofNullable(billsRepository.findAll()
-                .stream()
-                .filter(u -> Objects.equals(u.getUser().getId(), authenticationFacade.getCurrentUser().getId()))
-                .filter(b -> !b.getCategory().getName().equals(CategoryEnum.TRASH.get()))
-                .sorted(Comparator.comparing(BillsEntity::getPrice))
-                .collect(Collectors.toList()));
+        return billsRepository
+                .findAllByCategoryNameAndUserId(CategoryEnum.MAIN.get(), authenticationFacade.getCurrentUser().getId());
     }
 
     public Optional<BillsEntity> getOneBill(Integer id) {
-        return billsRepository.findById(id);
+        return billsRepository.findByIdAndUserId(id, authenticationFacade.getCurrentUser().getId());
     }
 
     public Optional<Collection<BillsEntity>> getDeletedBills() {
-        return billsRepository.findAllByCategoryName(CategoryEnum.TRASH.get());
+        return billsRepository
+                .findAllByCategoryNameAndUserId(CategoryEnum.TRASH.get(), authenticationFacade.getCurrentUser().getId());
     }
 
     public void removeBill(Integer id) {
@@ -65,24 +56,25 @@ public class BillsService {
         }
     }
 
+    @Transactional
     public void removeAllBills() {
         getBills().ifPresent(billsEntities -> billsEntities.forEach(bill -> removeBill(bill.getId())));
     }
 
     public void undoBill(Integer id) {
-        billsRepository.findById(id).ifPresent(bill ->
-                categoryRepository.findByName(CategoryEnum.MAIN.get())
-                        .ifPresent(category -> {
-                            bill.setCategory(category);
-                            billsRepository.save(bill);
-                        })
-        );
+        billsRepository.findByIdAndUserId(id, authenticationFacade.getCurrentUser().getId())
+                .ifPresent(bill ->
+                        categoryRepository.findByName(CategoryEnum.MAIN.get())
+                                .ifPresent(category -> {
+                                    bill.setCategory(category);
+                                    billsRepository.save(bill);
+                                })
+                );
     }
 
     public void deleteBill(Integer id) {
-        if (billsRepository.findById(id).isPresent()) {
-            billsRepository.delete(id);
-        }
+        billsRepository.findByIdAndUserId(id, authenticationFacade.getCurrentUser().getId())
+                .ifPresent(billsRepository::delete);
     }
 
     public Optional<Collection<BillsEntity>> search(String searchValue) {
@@ -96,6 +88,7 @@ public class BillsService {
         return billsEntities;
     }
 
+    @Transactional
     public void addBill(BillsEntity billsEntity) {
         billsRepository.save(billsEntity);
     }
