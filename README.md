@@ -26,8 +26,8 @@ Sample application is hosted on [HEROKU](https://personalbills.herokuapp.com).
 
 ### Still todo : ###
 
-* Spring Security - User access with user rights
-* User registeration
+* ~~Spring Security - User access with user rights~~
+* ~~User registeration~~
 * Import and export for reports
 * Better validation of form fields
 * Testing
