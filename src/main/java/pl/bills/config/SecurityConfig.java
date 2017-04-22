@@ -25,7 +25,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers("/", "/public/**").permitAll()
+                .antMatchers("/", "/public/**", "/register/**").permitAll()
                 .antMatchers("/users/**").hasAuthority("ADMIN")
                 .anyRequest().fullyAuthenticated()
                 .and()
@@ -42,30 +42,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .permitAll()
                 .and()
                 .rememberMe();
-//        http
-//                .authorizeRequests()
-//
-//                .antMatchers("/", "/public/**").permitAll()
-//                .antMatchers("/login").permitAll()
-//                .antMatchers("/register").permitAll()
-//                .anyRequest().authenticated()
-//
-//                .and()
-//
-//                .formLogin()
-//                .loginPage("/login")
-//                .loginProcessingUrl("/login")
-//                .failureForwardUrl("/login?error")
-//                .defaultSuccessUrl("/")
-//                .usernameParameter("email")
-//                .passwordParameter("password")
-//
-//                .and()
-//
-//                .logout()
-//                .logoutUrl("/logout")
-//                .logoutSuccessUrl("/login?logout")
-//                .invalidateHttpSession(true);
     }
 
     @Override

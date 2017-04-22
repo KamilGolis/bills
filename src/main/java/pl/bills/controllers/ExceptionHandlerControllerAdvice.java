@@ -21,7 +21,7 @@ public class ExceptionHandlerControllerAdvice {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public String handleNoSuchElementException(NoSuchElementException e) {
         LOGGER.error("No such element - " + e.getMessage());
-        return e.getMessage();
+        return "home";  //e.getMessage();
     }
 
 }

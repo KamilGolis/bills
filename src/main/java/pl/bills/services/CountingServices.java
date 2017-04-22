@@ -11,10 +11,7 @@ import pl.bills.other.AuthenticationFacade;
 import pl.bills.repository.BillsRepository;
 
 import java.math.BigDecimal;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 import static java.util.stream.Collectors.counting;
 import static java.util.stream.Collectors.groupingBy;
@@ -38,7 +35,7 @@ public class CountingServices {
 
     public BigDecimal totalBillsPrice() {
         Optional<Collection<BillsEntity>> bills = getAllBillsByCategoryAndUser();
-        if (bills.isPresent()) {
+        if (bills.isPresent() && !bills.get().isEmpty()) {
             BigDecimal result = bills.map(billsEntities -> billsEntities.stream()
                     .map(BillsEntity::getPrice)
                     .reduce(BigDecimal::add)
@@ -53,7 +50,7 @@ public class CountingServices {
 
     public BigDecimal biggestBillPrice() {
         Optional<Collection<BillsEntity>> bills = getAllBillsByCategoryAndUser();
-        if (bills.isPresent()) {
+        if (bills.isPresent() && !bills.get().isEmpty()) {
             BigDecimal result = bills.map(billsEntities -> billsEntities.stream()
                     .max(Comparator.comparing(BillsEntity::getPrice))
                     .get()
@@ -68,7 +65,7 @@ public class CountingServices {
 
     public String mostFrequentBill() {
         Optional<Collection<BillsEntity>> bills = getAllBillsByCategoryAndUser();
-        if (bills.isPresent()) {
+        if (bills.isPresent() && !bills.get().isEmpty()) {
             String result = bills.map(billsEntities -> billsEntities
                     .stream()
                     .collect(groupingBy(BillsEntity::getTitle, counting()))
@@ -85,8 +82,8 @@ public class CountingServices {
     }
 
     private Optional<Collection<BillsEntity>> getAllBillsByCategoryAndUser() {
-        //todo Counting for empty collection not working
         LOGGER.info("Getting bills for counting.");
-        return billsRepository.findAllByCategoryNameAndUserId(CategoryEnum.MAIN.get(), authenticationFacade.getCurrentUser().getId());
+        return billsRepository
+                .findAllByCategoryNameAndUserId(CategoryEnum.MAIN.get(), authenticationFacade.getCurrentUser().getId());
     }
 }

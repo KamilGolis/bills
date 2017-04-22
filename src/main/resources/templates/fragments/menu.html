@@ -8,7 +8,7 @@
 <div th:fragment="left (activeMenu)">
     <ul class="nav nav-sidebar">
         <li sec:authorize="isAnonymous()"><a th:href="@{/login}">Zaloguj się</a></li>
-        <li sec:authorize="isAnonymous()"><a th:href="@{/login}">Zarejestruj nowe konto</a></li>
+        <li sec:authorize="isAnonymous()"><a th:href="@{/register}">Zarejestruj nowe konto</a></li>
         <li sec:authorize="isAuthenticated()" th:class="${activeMenu == 'home'}? 'active'"><a th:href="@{home}">Podsumowanie</a></li>
         <!--<li th:class="${activeMenu == 'raport'}? 'active'"><a th:href="@{home}">Raporty</a></li>-->
         <!--<li th:class="${activeMenu == 'import'}? 'active'"><a th:href="@{home}">Inport/Export</a></li>-->

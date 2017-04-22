@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
@@ -33,6 +34,7 @@ public class UserController {
         this.userService = userService;
         this.userCreateFormValidator = userCreateFormValidator;
     }
+
     @InitBinder("form")
     public void initBinder(WebDataBinder binder) {
         binder.addValidators(userCreateFormValidator);
@@ -64,5 +66,31 @@ public class UserController {
             return "user_create";
         }
         return "redirect:/users";
+    }
+
+    @RequestMapping(value = "/register", method = RequestMethod.POST)
+    public String handleUserRegisteration(@Valid @ModelAttribute("form") UserCreateForm form, BindingResult bindingResult, Model model) {
+        if (bindingResult.hasErrors()) {
+            LOGGER.error("Binding error.");
+            //todo Register form nie wyświetla field errorów
+            return "register";
+        }
+        try {
+            userService.create(form);
+            LOGGER.info("Creating user :" + form.getEmail());
+        } catch (DataIntegrityViolationException e) {
+            LOGGER.error("Binding error on email.");
+            bindingResult.reject("email.exist", "Ten e-mail jest już zajęty.");
+            return "register";
+        }
+        return "redirect:/";
+    }
+
+    @RequestMapping(value = "/register", method = RequestMethod.GET)
+    public ModelAndView getRegisterPage() {
+        ModelAndView mav = new ModelAndView();
+        mav.setViewName("register");
+        mav.addObject("form", new UserCreateForm());
+        return mav;
     }
 }

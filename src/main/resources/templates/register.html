@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="description" content=""/>
+    <meta name="author" content=""/>
+    <link rel="shortcut icon" type="image/png" th:href="@{/images/favicon.png}"/>
+
+    <title>Rachunki</title>
+    <!-- Bootstrap core CSS -->
+    <link th:href="@{css/bootstrap.css}" rel="stylesheet"/>
+    <!-- Custom styles for this template -->
+    <link th:href="@{css/dashboard.css}" rel="stylesheet"/>
+</head>
+
+<body>
+<div class="loader"></div>
+<nav th:replace="fragments/navigation :: top"></nav>
+
+<div class="container-fluid">
+    <div class="row">
+
+        <div class="col-sm-6 col-sm-offset-3 col-md-8 col-md-offset-2 main">
+
+            <div>
+
+                <form th:action="@{/register}" th:object="${form}" method="post">
+                    <div class="form-group">
+                        <label for="email">E-mail</label>
+                        <input type="email" class="form-control" id="email" th:field="*{email}" th:required="true"
+                               th:autofocus="true" placeholder="demo@gmail.com"/>
+                        <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="label label-danger">Email już istnieje</span>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Hasło</label>
+                        <input type="password" class="form-control" id="password" th:field="*{password}"
+                               th:required="true" placeholder="demo"/>
+                        <span th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="label label-danger">Złe hasło</span>
+                    </div>
+                    <div class="form-group">
+                        <label for="passwordRepeated">Powtórz hasło</label>
+                        <input type="password" class="form-control" id="passwordRepeated" th:field="*{passwordRepeated}"
+                               th:required="true" placeholder="demo"/>
+                        <span th:if="${#fields.hasErrors('passwordRepeated')}" th:errors="*{passwordRepeated}" class="label label-danger">Złe hasło</span>
+                    </div>
+                    <div class="form-group">
+                        <label for="safeCode">Kod zabezpieczający</label>
+                        <input type="text" class="form-control" id="safeCode" th:field="*{safeCode}" th:required="true"
+                               placeholder=""/>
+                        <span th:if="${#fields.hasErrors('safeCode')}" th:errors="*{safeCode}" class="label label-danger">Wpisz poprawny kod</span>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Zarejestruj nowe konto</button>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script th:src="@{js/bootstrap.min.js}"></script>
+<script type="text/javascript">
+    $(window).load(function () {
+        $(".loader").fadeOut("slow");
+    })
+</script>
+</body>
+
+</html>

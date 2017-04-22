@@ -19,6 +19,9 @@ public class UserCreateForm {
     @NotEmpty
     private String passwordRepeated = "";
 
+    @NotEmpty
+    private String safeCode = "";
+
     @NotNull
     private Role role = Role.USER;
 
@@ -52,5 +55,13 @@ public class UserCreateForm {
 
     public void setRole(Role role) {
         this.role = role;
+    }
+
+    public String getSafeCode() {
+        return safeCode;
+    }
+
+    public void setSafeCode(String safeCode) {
+        this.safeCode = safeCode;
     }
 }
