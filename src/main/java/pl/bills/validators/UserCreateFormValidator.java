@@ -30,17 +30,24 @@ public class UserCreateFormValidator implements Validator {
         UserCreateForm form = (UserCreateForm) target;
         validatePasswords(errors, form);
         validateEmail(errors, form);
+        validateSafeCode(errors, form);
     }
 
     private void validatePasswords(Errors errors, UserCreateForm form) {
         if (!form.getPassword().equals(form.getPasswordRepeated())) {
-            errors.reject("password.no_match", "Hasła nie pasują");
+            errors.rejectValue("passwordRepeated", "passwordRepeated.no_match", "Źle przepisane hasło");
         }
     }
 
     private void validateEmail(Errors errors, UserCreateForm form) {
         if (userService.getUserByEmail(form.getEmail()).isPresent()) {
-            errors.reject("email.exists", "Użytkownik o tym emailu już istnieje");
+            errors.rejectValue("email", "email.exists", "Użytkownik o tym emailu już istnieje");
+        }
+    }
+
+    private void validateSafeCode(Errors errors, UserCreateForm form) {
+        if (form.getSafeCode().isEmpty() || form.getSafeCode() == null) {
+            errors.rejectValue("safeCode", "safeCode.empty", "Kod bezpieczeństwa jest pusty");
         }
     }
 }

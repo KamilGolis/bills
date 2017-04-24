@@ -8,14 +8,17 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import pl.bills.forms.UserCreateForm;
 import pl.bills.services.UserService;
 import pl.bills.validators.UserCreateFormValidator;
 
 import javax.validation.Valid;
+import java.util.List;
 import java.util.NoSuchElementException;
 
 /**
@@ -69,10 +72,11 @@ public class UserController {
     }
 
     @RequestMapping(value = "/register", method = RequestMethod.POST)
-    public String handleUserRegisteration(@Valid @ModelAttribute("form") UserCreateForm form, BindingResult bindingResult, Model model) {
+    public String handleUserRegisteration(@Valid @ModelAttribute("form") UserCreateForm form, BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
             LOGGER.error("Binding error.");
-            //todo Register form nie wyświetla field errorów
+            List<ObjectError> allErrors = bindingResult.getAllErrors();
+            allErrors.forEach(e -> LOGGER.error("Error -> {} : {}", e.getObjectName(), e.getDefaultMessage()));
             return "register";
         }
         try {
@@ -83,7 +87,9 @@ public class UserController {
             bindingResult.reject("email.exist", "Ten e-mail jest już zajęty.");
             return "register";
         }
-        return "redirect:/";
+        redirectAttributes.addAttribute("email", form.getEmail());
+        redirectAttributes.addFlashAttribute("message", "Konto użytkownika (" + form.getEmail() + ") założone pomyślnie");
+        return "redirect:/register";
     }
 
     @RequestMapping(value = "/register", method = RequestMethod.GET)

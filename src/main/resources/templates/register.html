@@ -23,33 +23,62 @@
     <div class="row">
 
         <div class="col-sm-6 col-sm-offset-3 col-md-8 col-md-offset-2 main">
-
+            <div class="alert alert-success" role="alert" th:if="${message != null}">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <p th:text="${message}">Email już istnieje</p>
+            </div>
             <div>
-
-                <form th:action="@{/register}" th:object="${form}" method="post">
+                <form th:action="@{/register}" th:object="${form}" role="form" method="post">
+                    <div class="alert alert-danger" role="alert" th:if="${#fields.hasGlobalErrors()}">
+                        <p th:each="err : ${#fields.globalErrors()}" th:text="${err}">...</p>
+                    </div>
                     <div class="form-group">
                         <label for="email">E-mail</label>
                         <input type="email" class="form-control" id="email" th:field="*{email}" th:required="true"
                                th:autofocus="true" placeholder="demo@gmail.com"/>
-                        <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="label label-danger">Email już istnieje</span>
+                        <div class="alert alert-danger" role="alert" th:if="${#fields.hasErrors('email')}">
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            <p th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Email już istnieje</p>
+                        </div>
                     </div>
                     <div class="form-group">
                         <label for="password">Hasło</label>
                         <input type="password" class="form-control" id="password" th:field="*{password}"
                                th:required="true" placeholder="demo"/>
-                        <span th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="label label-danger">Złe hasło</span>
+                        <div class="alert alert-danger" role="alert" th:if="${#fields.hasErrors('password')}">
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            <p th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Złe hasło</p>
+                        </div>
                     </div>
                     <div class="form-group">
                         <label for="passwordRepeated">Powtórz hasło</label>
                         <input type="password" class="form-control" id="passwordRepeated" th:field="*{passwordRepeated}"
                                th:required="true" placeholder="demo"/>
-                        <span th:if="${#fields.hasErrors('passwordRepeated')}" th:errors="*{passwordRepeated}" class="label label-danger">Złe hasło</span>
+                        <div class="alert alert-danger" role="alert" th:if="${#fields.hasErrors('passwordRepeated')}">
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            <p th:if="${#fields.hasErrors('passwordRepeated')}" th:errors="*{passwordRepeated}">Złe
+                                hasło</p>
+                        </div>
                     </div>
                     <div class="form-group">
                         <label for="safeCode">Kod zabezpieczający</label>
                         <input type="text" class="form-control" id="safeCode" th:field="*{safeCode}" th:required="true"
                                placeholder=""/>
-                        <span th:if="${#fields.hasErrors('safeCode')}" th:errors="*{safeCode}" class="label label-danger">Wpisz poprawny kod</span>
+                        <div class="alert alert-danger" role="alert" th:if="${#fields.hasErrors('safeCode')}">
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            <p th:if="${#fields.hasErrors('safeCode')}" th:errors="*{safeCode}">Wpisz poprawny kod</p>
+                        </div>
+
                     </div>
                     <button type="submit" class="btn btn-primary">Zarejestruj nowe konto</button>
                 </form>
