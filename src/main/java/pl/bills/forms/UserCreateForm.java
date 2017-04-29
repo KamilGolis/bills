@@ -4,6 +4,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 import pl.bills.enums.Role;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 
 /**
  * Created by trot on 12.04.17.
@@ -14,6 +15,7 @@ public class UserCreateForm {
     private String email = "";
 
     @NotEmpty
+    @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=\\S+$).{8,}$", message = "Hasło musi zawierać min.8 znaków, jedną dużą i małą literę oraz cyfrę.")
     private String password = "";
 
     @NotEmpty

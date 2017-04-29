@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 import pl.bills.forms.UserCreateForm;
+import pl.bills.other.UserSafeCodeGenerator;
 import pl.bills.services.UserService;
 
 /**
@@ -14,10 +15,12 @@ import pl.bills.services.UserService;
 public class UserCreateFormValidator implements Validator {
 
     private final UserService userService;
+    private final UserSafeCodeGenerator userSafeCodeGenerator;
 
     @Autowired
-    public UserCreateFormValidator(UserService userService) {
+    public UserCreateFormValidator(UserService userService, UserSafeCodeGenerator userSafeCodeGenerator) {
         this.userService = userService;
+        this.userSafeCodeGenerator = userSafeCodeGenerator;
     }
 
     @Override
@@ -46,8 +49,9 @@ public class UserCreateFormValidator implements Validator {
     }
 
     private void validateSafeCode(Errors errors, UserCreateForm form) {
-        if (form.getSafeCode().isEmpty() || form.getSafeCode() == null) {
-            errors.rejectValue("safeCode", "safeCode.empty", "Kod bezpieczeństwa jest pusty");
+        String formSafeCode = form.getSafeCode();
+        if (formSafeCode.isEmpty() || formSafeCode == null || !formSafeCode.equals(userSafeCodeGenerator.getSafeCode())) {
+            errors.rejectValue("safeCode", "safeCode.error", "Kod bezpieczeństwa jest pusty lub nieprawidłowy");
         }
     }
 }
