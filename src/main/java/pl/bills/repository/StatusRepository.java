@@ -7,9 +7,6 @@ import pl.bills.entities.StatusEntity;
 import java.util.Collection;
 import java.util.Optional;
 
-/**
- * Created by trot on 09.01.17.
- */
 @Repository
 public interface StatusRepository extends JpaRepository<StatusEntity, Integer> {
 

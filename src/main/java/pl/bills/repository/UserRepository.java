@@ -6,9 +6,6 @@ import pl.bills.entities.UserEntity;
 
 import java.util.Optional;
 
-/**
- * Created by trot on 12.04.17.
- */
 @Repository
 public interface UserRepository extends JpaRepository<UserEntity, Integer> {
 

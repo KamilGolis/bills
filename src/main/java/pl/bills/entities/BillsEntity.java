@@ -2,16 +2,12 @@ package pl.bills.entities;
 
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.NumberFormat;
-import org.springframework.stereotype.Controller;
 
 import javax.persistence.*;
 import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-/**
- * Created by trot on 08.01.17.
- */
 @Entity
 @Table(name = "bills")
 public class BillsEntity {

@@ -3,13 +3,7 @@ package pl.bills.entities;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 import java.util.Set;
-
-/**
- * Created by trot on 08.01.17.
- */
 
 @Entity
 @Table(name = "status")

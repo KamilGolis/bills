@@ -5,9 +5,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
-/**
- * Created by trot on 13.04.17.
- */
 @ControllerAdvice
 public class CurrentUserControllerAdvice {
 

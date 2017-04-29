@@ -10,9 +10,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-/**
- * Created by trot on 10.02.17.
- */
 @Component
 public class DateFormatter implements Formatter<Date> {
 
@@ -24,7 +21,7 @@ public class DateFormatter implements Formatter<Date> {
 
     @Override
     public Date parse(final String text, final Locale locale) throws ParseException {
-        LOGGER.info("Converting date to lacal date");
+        LOGGER.info("Converting date to local date");
         return createDateFormat(locale).parse(text);
     }
 

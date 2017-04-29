@@ -9,9 +9,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.util.NoSuchElementException;
 
-/**
- * Created by trot on 13.04.17.
- */
 @ControllerAdvice
 public class ExceptionHandlerControllerAdvice {
 

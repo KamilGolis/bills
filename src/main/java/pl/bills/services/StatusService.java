@@ -8,13 +8,10 @@ import pl.bills.repository.StatusRepository;
 import java.util.Collection;
 import java.util.Optional;
 
-/**
- * Created by trot on 22.01.17.
- */
 @Service
 public class StatusService {
 
-    private StatusRepository statusRepository;
+    private final StatusRepository statusRepository;
 
     @Autowired
     public StatusService(StatusRepository statusRepository) {

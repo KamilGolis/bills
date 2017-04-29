@@ -10,9 +10,6 @@ import pl.bills.converters.*;
 
 import java.util.Arrays;
 
-/**
- * Created by trot on 03.02.17.
- */
 @Configuration
 @EnableAutoConfiguration
 @ComponentScan

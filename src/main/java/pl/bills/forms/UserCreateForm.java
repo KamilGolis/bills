@@ -6,9 +6,6 @@ import pl.bills.enums.Role;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
-/**
- * Created by trot on 12.04.17.
- */
 public class UserCreateForm {
 
     @NotEmpty

@@ -12,16 +12,13 @@ import java.text.ParseException;
 import java.util.Locale;
 import java.util.NoSuchElementException;
 
-/**
- * Created by trot on 04.02.17.
- */
 @Component
 public class CategoryFormatter implements Formatter<CategoryEntity> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CategoryFormatter.class);
 
     @Autowired
-    CategoryService categoryService;
+    private CategoryService categoryService;
 
     @Override
     public CategoryEntity parse(String categoryName, Locale locale) throws ParseException {

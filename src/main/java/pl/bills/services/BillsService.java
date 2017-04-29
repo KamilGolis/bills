@@ -13,15 +13,12 @@ import pl.bills.repository.CategoryRepository;
 import java.util.Collection;
 import java.util.Optional;
 
-/**
- * Created by trot on 09.01.17.
- */
 @Service
 public class BillsService {
 
-    private BillsRepository billsRepository;
-    private CategoryRepository categoryRepository;
-    private AuthenticationFacade authenticationFacade;
+    private final BillsRepository billsRepository;
+    private final CategoryRepository categoryRepository;
+    private final AuthenticationFacade authenticationFacade;
 
     @Autowired
     public BillsService(BillsRepository billsRepository, CategoryRepository categoryRepository, AuthenticationFacade authenticationFacade) {

@@ -1,19 +1,19 @@
 package pl.bills.enums;
 
-/**
- * Created by trot on 23.01.17.
+/*
+  Created by trot on 23.01.17.
  */
 
 /**
  * Required categories.
- * MAIN for every bill if other categories are not avaible
+ * MAIN for every bill if other categories are not available
  * TRASH for deleted but not removed bills.
  */
 public enum CategoryEnum {
     MAIN("Główna"),
     TRASH("Kosz");
 
-    private String category;
+    private final String category;
 
     CategoryEnum(String category) {
         this.category = category;

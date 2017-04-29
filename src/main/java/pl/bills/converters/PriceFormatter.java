@@ -11,9 +11,6 @@ import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.Locale;
 
-/**
- * Created by trot on 10.02.17.
- */
 @Component
 public class PriceFormatter implements Formatter<BigDecimal> {
 

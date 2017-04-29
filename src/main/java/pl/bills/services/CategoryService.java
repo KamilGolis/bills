@@ -9,13 +9,10 @@ import pl.bills.repository.CategoryRepository;
 import java.util.Collection;
 import java.util.Optional;
 
-/**
- * Created by trot on 04.02.17.
- */
 @Service
 public class CategoryService {
 
-    private CategoryRepository categoryRepository;
+    private final CategoryRepository categoryRepository;
 
     @Autowired
     public CategoryService(CategoryRepository categoryRepository) {

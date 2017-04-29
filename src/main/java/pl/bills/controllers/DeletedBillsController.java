@@ -12,16 +12,12 @@ import pl.bills.services.BillsService;
 
 import java.util.ArrayList;
 
-/**
- * Created by trot on 23.01.17.
- */
-
 @Controller
 public class DeletedBillsController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DeletedBillsController.class);
 
-    private BillsService billsService;
+    private final BillsService billsService;
 
     @Autowired
     public DeletedBillsController(BillsService billsService) {

@@ -4,7 +4,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -23,19 +22,15 @@ import pl.bills.services.StatusService;
 import javax.validation.Valid;
 import java.util.ArrayList;
 
-/**
- * Created by trot on 19.01.17.
- */
-
 @Controller
 public class BillsController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(BillsController.class);
 
-    private BillsService billsService;
-    private StatusService statusService;
-    private CategoryService categoryService;
-    private LoanHolderService loanHolderService;
+    private final BillsService billsService;
+    private final StatusService statusService;
+    private final CategoryService categoryService;
+    private final LoanHolderService loanHolderService;
 
     @Autowired
     public BillsController(BillsService billsService, StatusService statusService, CategoryService categoryService, LoanHolderService loanHolderService) {
@@ -59,8 +54,8 @@ public class BillsController {
     }
 
     @RequestMapping(value = "/search")
-    public ModelAndView search(ModelAndView mav, @RequestParam String search) {
-        mav = new ModelAndView("bills");
+    public ModelAndView search(@RequestParam String search) {
+        ModelAndView mav = new ModelAndView("bills");
         mav.addObject("billsList", billsService.search(search).orElse(new ArrayList<>()));
         return mav;
     }

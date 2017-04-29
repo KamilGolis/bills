@@ -7,9 +7,6 @@ import org.springframework.stereotype.Service;
 import pl.bills.entities.UserEntity;
 import pl.bills.other.CurrentUser;
 
-/**
- * Created by trot on 13.04.17.
- */
 @Service
 public class CurrentUserDetailsService implements UserDetailsService {
 

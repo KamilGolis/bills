@@ -11,9 +11,6 @@ import pl.bills.repository.UserRepository;
 import java.util.Collection;
 import java.util.Optional;
 
-/**
- * Created by trot on 12.04.17.
- */
 @Service
 public class UserService {
 

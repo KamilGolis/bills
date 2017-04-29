@@ -8,13 +8,10 @@ import pl.bills.repository.LoanHolderRepository;
 import java.util.Collection;
 import java.util.Optional;
 
-/**
- * Created by trot on 09.02.17.
- */
 @Service
 public class LoanHolderService {
 
-    private LoanHolderRepository loanHolderRepository;
+    private final LoanHolderRepository loanHolderRepository;
 
     @Autowired
     public LoanHolderService(LoanHolderRepository loanHolderRepository) {

@@ -8,9 +8,6 @@ import pl.bills.forms.UserCreateForm;
 import pl.bills.other.UserSafeCodeGenerator;
 import pl.bills.services.UserService;
 
-/**
- * Created by trot on 13.04.17.
- */
 @Component
 public class UserCreateFormValidator implements Validator {
 

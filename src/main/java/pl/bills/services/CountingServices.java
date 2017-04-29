@@ -4,7 +4,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import pl.bills.controllers.HomeController;
 import pl.bills.entities.BillsEntity;
 import pl.bills.enums.CategoryEnum;
 import pl.bills.other.AuthenticationFacade;
@@ -16,16 +15,13 @@ import java.util.*;
 import static java.util.stream.Collectors.counting;
 import static java.util.stream.Collectors.groupingBy;
 
-/**
- * Created by trot on 28.01.17.
- */
 @Service
 public class CountingServices {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CountingServices.class);
 
-    private BillsRepository billsRepository;
-    private AuthenticationFacade authenticationFacade;
+    private final BillsRepository billsRepository;
+    private final AuthenticationFacade authenticationFacade;
 
     @Autowired
     public CountingServices(BillsRepository billsRepository, AuthenticationFacade authenticationFacade) {

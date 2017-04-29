@@ -5,9 +5,6 @@ import pl.bills.enums.Role;
 import javax.persistence.*;
 import java.util.Set;
 
-/**
- * Created by trot on 12.04.17.
- */
 @Entity
 @Table(name = "user")
 public class UserEntity {

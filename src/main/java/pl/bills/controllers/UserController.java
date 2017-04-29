@@ -22,9 +22,6 @@ import javax.validation.Valid;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-/**
- * Created by trot on 13.04.17.
- */
 @Controller
 public class UserController {
 

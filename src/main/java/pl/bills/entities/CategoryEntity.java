@@ -4,10 +4,6 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Set;
 
-/**
- * Created by trot on 09.01.17.
- */
-
 @Entity
 @Table(name = "category")
 public class CategoryEntity {

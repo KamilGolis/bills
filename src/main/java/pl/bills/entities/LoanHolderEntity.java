@@ -6,10 +6,6 @@ import javax.persistence.*;
 import javax.validation.Valid;
 import java.util.Set;
 
-/**
- * Created by trot on 09.01.17.
- */
-
 @Entity
 @Table(name = "loan_holders")
 public class LoanHolderEntity {

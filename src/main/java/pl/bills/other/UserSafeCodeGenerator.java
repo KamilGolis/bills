@@ -4,9 +4,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.UUID;
 
-/**
- * Created by trot on 29.04.17.
- */
 @Component
 public class UserSafeCodeGenerator {
 

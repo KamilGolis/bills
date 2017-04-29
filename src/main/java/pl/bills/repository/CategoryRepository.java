@@ -7,10 +7,6 @@ import pl.bills.entities.CategoryEntity;
 import java.util.Collection;
 import java.util.Optional;
 
-/**
- * Created by trot on 09.01.17.
- */
-
 @Repository
 public interface CategoryRepository extends JpaRepository<CategoryEntity, Integer> {
 
