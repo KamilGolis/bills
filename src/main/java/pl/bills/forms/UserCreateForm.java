@@ -5,6 +5,7 @@ import pl.bills.enums.Role;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
+import java.util.UUID;
 
 public class UserCreateForm {
 
@@ -20,6 +21,9 @@ public class UserCreateForm {
 
     @NotEmpty
     private String safeCode = "";
+
+    @NotEmpty
+    private String randomSafeCode = "";
 
     @NotNull
     private Role role = Role.USER;
@@ -62,5 +66,17 @@ public class UserCreateForm {
 
     public void setSafeCode(String safeCode) {
         this.safeCode = safeCode;
+    }
+
+    public String getRandomSafeCode() {
+        return randomSafeCode;
+    }
+
+    public void setRandomSafeCode(String randomSafeCode) {
+        this.randomSafeCode = randomSafeCode;
+    }
+
+    public void generateNewRandomSafeCode() {
+        randomSafeCode = UUID.randomUUID().toString().substring(0,5);
     }
 }

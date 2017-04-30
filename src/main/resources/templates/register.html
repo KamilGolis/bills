@@ -72,7 +72,8 @@
                     <div class="form-group">
                         <label for="safeCode">Kod zabezpieczający</label>
                         <div class="input-group">
-                            <span class="input-group-addon" id="code" th:text="${safeCode}">1234</span>
+                            <span class="input-group-addon" id="code" th:text="*{randomSafeCode}">1234</span>
+                            <input hidden="hidden" th:field="*{randomSafeCode}"/>
                             <input type="text" class="form-control" id="safeCode" th:field="*{safeCode}"
                                    th:required="true"
                                    placeholder="" aria-describedby="code"/>

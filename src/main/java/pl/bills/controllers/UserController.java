@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import pl.bills.forms.UserCreateForm;
-import pl.bills.other.UserSafeCodeGenerator;
 import pl.bills.services.UserService;
 import pl.bills.validators.UserCreateFormValidator;
 
@@ -29,13 +28,11 @@ public class UserController {
 
     private final UserService userService;
     private final UserCreateFormValidator userCreateFormValidator;
-    private final UserSafeCodeGenerator userSafeCodeGenerator;
 
     @Autowired
-    public UserController(UserService userService, UserCreateFormValidator userCreateFormValidator, UserSafeCodeGenerator userSafeCodeGenerator) {
+    public UserController(UserService userService, UserCreateFormValidator userCreateFormValidator) {
         this.userService = userService;
         this.userCreateFormValidator = userCreateFormValidator;
-        this.userSafeCodeGenerator = userSafeCodeGenerator;
     }
 
     @InitBinder("form")
@@ -77,7 +74,7 @@ public class UserController {
             LOGGER.error("Binding error.");
             List<ObjectError> allErrors = bindingResult.getAllErrors();
             allErrors.forEach(e -> LOGGER.error("Error -> {} : {}", e.getObjectName(), e.getDefaultMessage()));
-            model.addAttribute("safeCode", userSafeCodeGenerator.getNewCode());
+            form.generateNewRandomSafeCode();
             return "register";
         }
         try {
@@ -86,12 +83,12 @@ public class UserController {
         } catch (DataIntegrityViolationException e) {
             LOGGER.error("Binding error on email.");
             bindingResult.reject("email.exist", "Ten e-mail jest już zajęty.");
-            model.addAttribute("safeCode", userSafeCodeGenerator.getNewCode());
+            form.generateNewRandomSafeCode();
             return "register";
         }
         redirectAttributes.addAttribute("email", form.getEmail());
         redirectAttributes.addFlashAttribute("message", "Konto użytkownika (" + form.getEmail() + ") założone pomyślnie");
-        model.addAttribute("safeCode", userSafeCodeGenerator.getNewCode());
+        form.generateNewRandomSafeCode();
         return "redirect:/register";
     }
 
@@ -99,8 +96,9 @@ public class UserController {
     public ModelAndView getRegisterPage() {
         ModelAndView mav = new ModelAndView();
         mav.setViewName("register");
-        mav.addObject("form", new UserCreateForm());
-        mav.addObject("safeCode", userSafeCodeGenerator.getNewCode());
+        UserCreateForm userCreateForm = new UserCreateForm();
+        userCreateForm.generateNewRandomSafeCode();
+        mav.addObject("form", userCreateForm);
         return mav;
     }
 }
