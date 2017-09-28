@@ -1,5 +1,14 @@
 package pl.bills.config;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
+
+import javax.sql.DataSource;
+import java.net.URI;
+import java.net.URISyntaxException;
+
 public abstract class DatabaseConfig {
     protected void configureDataSource(org.apache.tomcat.jdbc.pool.DataSource dataSource) {
         dataSource.setMaxActive(20);
