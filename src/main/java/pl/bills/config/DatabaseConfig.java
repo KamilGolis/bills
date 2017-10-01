@@ -35,7 +35,10 @@ class HerokuDatabaseConfig extends DatabaseConfig {
 
         dataSource.setUsername(dbUri.getUserInfo().split(":")[0]);
         dataSource.setPassword(dbUri.getUserInfo().split(":")[1]);
+//        dataSource.setUsername("postgres");
+//        dataSource.setPassword("postgres");
         dataSource.setUrl("jdbc:postgresql://" + dbUri.getHost() + ':' + dbUri.getPort() + dbUri.getPath());
+//        dataSource.setUrl("jdbc:postgresql://localhost:5432/postgres");
         dataSource.setDriverClassName("org.postgresql.Driver");
 
         configureDataSource(dataSource);
