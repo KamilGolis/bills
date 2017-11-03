@@ -28,6 +28,8 @@ Sample application is hosted on [HEROKU](https://personalbills.herokuapp.com).
 
 * ~~Spring Security - User access with user rights~~
 * ~~User registeration~~
+* ~~No DB reset after application awake~~
+* ~~Responsive page for mobile phones~~
 * Import and export for reports
 * Better validation of form fields
 * Testing
@@ -37,7 +39,5 @@ Sample application is hosted on [HEROKU](https://personalbills.herokuapp.com).
 * Rest api with frontend in Angular
 * SPA
 * Internationalization
-* No DB reset after application awake
-* Responsive page for mobile phones
 * Alerts on e-mail for upcoming bills
 * Integration with calendar (google or outlook)
